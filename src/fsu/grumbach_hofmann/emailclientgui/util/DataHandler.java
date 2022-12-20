@@ -11,18 +11,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.mail.Address;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 
@@ -231,6 +230,7 @@ public class DataHandler {
 					InputStream source = new FileInputStream(mailFile);
 					MimeMessage m = new MimeMessage(emailSession, source);
 					emailList.add(m);
+
 					// create mail objects
 					Address[] froms = m.getFrom();
 					Address[] tos = m.getAllRecipients();
@@ -243,12 +243,14 @@ public class DataHandler {
 					} else {
 						recipients = "???";
 					}
+					String sentDate = m.getSentDate() == null ? "???"
+							: new SimpleDateFormat("dd.MM.yyyy hh:mm:ss").format(m.getSentDate());
 					if (m.getSentDate() != null) {
-						mailObjectList.add(new MailObject(m.getSubject(), "no", from, recipients,
-								m.getSentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
+						String content = getTextFromMessage(m);
+						mailObjectList.add(new MailObject(m.getSubject(), "no", from, recipients, sentDate, content.substring(0, Math.min(content.length(), 100)).replace("\n", " ").replace("\r", " ")));
 					}
 
-				} catch (MessagingException | FileNotFoundException e) {
+				} catch (MessagingException | IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -265,6 +267,41 @@ public class DataHandler {
 
 	public ArrayList<MailObject> getMailObjectList() {
 		return mailObjectList;
+	}
+	
+	private String getTextFromMessage(Message message) throws MessagingException, IOException {
+	    if (message.isMimeType("text/plain")) {
+	        return message.getContent().toString();
+	    } 
+	    if (message.isMimeType("multipart/*")) {
+	        MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
+	        return getTextFromMimeMultipart(mimeMultipart);
+	    }
+	    return "";
+	}
+
+	private String getTextFromMimeMultipart(
+	        MimeMultipart mimeMultipart)  throws MessagingException, IOException{
+	    String result = "";
+	    for (int i = 0; i < mimeMultipart.getCount(); i++) {
+	        BodyPart bodyPart = mimeMultipart.getBodyPart(i);
+	        if (bodyPart.isMimeType("text/plain")) {
+	            return result + "\n" + bodyPart.getContent(); // without return, same text appears twice in my tests
+	        } 
+	        result += this.parseBodyPart(bodyPart);
+	    }
+	    return result;
+	}
+
+	private String parseBodyPart(BodyPart bodyPart) throws MessagingException, IOException { 
+	    if (bodyPart.isMimeType("text/html")) {
+	        return "";
+	    } 
+	    if (bodyPart.getContent() instanceof MimeMultipart){
+	        return getTextFromMimeMultipart((MimeMultipart)bodyPart.getContent());
+	    }
+
+	    return "";
 	}
 
 }

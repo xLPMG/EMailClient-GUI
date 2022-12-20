@@ -1,18 +1,16 @@
 package fsu.grumbach_hofmann.emailclientgui.mail;
 
-import java.time.LocalDate;
-
 public class MailObject {
 	
-	private String subject, read, from, to;
-	private LocalDate dateSent;
+	private String subject, read, from, to, dateSent,preview;
 
-	public MailObject(String subject, String read, String from, String to, LocalDate dateSent) {
+	public MailObject(String subject, String read, String from, String to, String dateSent, String preview) {
 		this.subject=subject;
 		this.read=read;
 		this.from=from;
 		this.to=to;
 		this.dateSent=dateSent;
+		this.preview=preview;
 	}
 	
 	public String getSubject() {
@@ -47,11 +45,19 @@ public class MailObject {
 		this.to = to;
 	}
 
-	public LocalDate getDateSent() {
+	public String getDateSent() {
 		return dateSent;
 	}
 
-	public void setDateSent(LocalDate dateSent) {
+	public void setDateSent(String dateSent) {
 		this.dateSent = dateSent;
+	}
+	
+	public String getPreview() {
+		return preview;
+	}
+
+	public void setPreview(String preview) {
+		this.preview = preview;
 	}
 }

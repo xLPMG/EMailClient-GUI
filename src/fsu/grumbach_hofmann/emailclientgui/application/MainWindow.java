@@ -1,6 +1,10 @@
 package fsu.grumbach_hofmann.emailclientgui.application;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
+import fsu.grumbach_hofmann.emailclientgui.mail.MailReceiver;
 import fsu.grumbach_hofmann.emailclientgui.util.Account;
 import fsu.grumbach_hofmann.emailclientgui.util.DataHandler;
 import fsu.grumbach_hofmann.emailclientgui.util.MailCellFactory;
@@ -18,6 +22,7 @@ import javafx.stage.Stage;
 public class MainWindow extends Application {
 
 	private DataHandler handler;
+	private MailReceiver receiver;
 	private Scene scene;
 	private ChoiceBox accountsDropdown;
 	private Label inboxLabel;
@@ -28,6 +33,7 @@ public class MainWindow extends Application {
 	@Override
 	public void init() {
 		handler = new DataHandler();
+		receiver = new MailReceiver(handler);
 	}
 
 	private void postInit() {
@@ -35,7 +41,7 @@ public class MainWindow extends Application {
 		totalMessagesLabel = (Label) scene.lookup("#totalMessagesLabel");
 		accountsDropdown = (ChoiceBox) scene.lookup("#accountsDropdown");
 		messagesList = (ListView) scene.lookup("#messagesList");
-
+		
 		initAccountList(accountsDropdown);
 		accountsDropdown.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			@Override
@@ -44,6 +50,7 @@ public class MainWindow extends Application {
 				for (Account acc : handler.getAccountData()) {
 					if (acc.getEmail().equals(accMail)) {
 						selectedAccount = acc;
+//						receiver.receiveMails(acc.getInbox(), acc.getInboxPort()+"", acc.getUsername(), acc.getPassword());
 						updateMessagesList();
 					}
 				}
@@ -87,9 +94,12 @@ public class MainWindow extends Application {
 		if (selectedAccount != null) {
 			inboxLabel.setText("Inbox - " + selectedAccount.getEmail());
 			totalMessagesLabel.setText(handler.getEmailList().size() + " messages found");
-			for(MailObject mO : handler.getMailObjectList()) {
-				messagesList.getItems().add(mO);
-			}
+//			for(MailObject mO : handler.getMailObjectList()) {
+//				messagesList.getItems().add(mO);
+//			}
+			Collections.sort(handler.getMailObjectList());
+			messagesList.getItems().addAll(handler.getMailObjectList());
+			
 		} else {
 			inboxLabel.setText("Inbox - <select an account first>");
 			totalMessagesLabel.setText("No messages found");

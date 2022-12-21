@@ -9,9 +9,9 @@
 
 <AnchorPane fx:id="cellMainPane" nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-radius: 5 5 5 5;" styleClass="tertiarySystemBackground" stylesheets="@../style/DarkTheme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox fx:id="cellMainBox" maxWidth="-Infinity" prefWidth="340.0">
+      <VBox fx:id="cellMainBox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <BorderPane VBox.vgrow="ALWAYS">
+            <BorderPane fx:id="cellBorderPane" VBox.vgrow="NEVER">
                <left>
                   <Label fx:id="cellLabelSender" styleClass="primarylabel" text="Sender" BorderPane.alignment="CENTER">
                      <font>
@@ -23,12 +23,12 @@
                   <Label fx:id="cellLabelDate" alignment="CENTER_RIGHT" styleClass="secondaryLabel" text="Date Sent" BorderPane.alignment="CENTER" />
                </right>
             </BorderPane>
-            <Label fx:id="cellLabelSubject" styleClass="secondaryLabel" text="Subject" VBox.vgrow="ALWAYS">
+            <Label fx:id="cellLabelSubject" styleClass="secondaryLabel" text="Subject" VBox.vgrow="NEVER">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label fx:id="cellLabelContent" styleClass="tertiaryLabel" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." wrapText="true" VBox.vgrow="ALWAYS" />
+            <Label fx:id="cellLabelContent" styleClass="tertiaryLabel" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt.." wrapText="true" VBox.vgrow="NEVER" />
          </children>
          <opaqueInsets>
             <Insets />

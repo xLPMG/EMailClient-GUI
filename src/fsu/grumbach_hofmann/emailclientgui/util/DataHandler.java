@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -247,7 +250,11 @@ public class DataHandler {
 							: new SimpleDateFormat("dd.MM.yyyy hh:mm:ss").format(m.getSentDate());
 					if (m.getSentDate() != null) {
 						String content = getTextFromMessage(m);
-						mailObjectList.add(new MailObject(m.getSubject(), "no", from, recipients, sentDate, content.substring(0, Math.min(content.length(), 100)).replace("\n", " ").replace("\r", " ")));
+						LocalDate date = Instant.ofEpochMilli(m.getSentDate().getTime()).atZone(ZoneId.systemDefault())
+								.toLocalDate();
+						mailObjectList.add(new MailObject(m.getSubject(), "no", from, recipients, sentDate, content
+								.substring(0, Math.min(content.length(), 100)).replace("\n", " ").replace("\r", " "),
+								date));
 					}
 
 				} catch (MessagingException | IOException e) {
@@ -268,40 +275,39 @@ public class DataHandler {
 	public ArrayList<MailObject> getMailObjectList() {
 		return mailObjectList;
 	}
-	
+
 	private String getTextFromMessage(Message message) throws MessagingException, IOException {
-	    if (message.isMimeType("text/plain")) {
-	        return message.getContent().toString();
-	    } 
-	    if (message.isMimeType("multipart/*")) {
-	        MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
-	        return getTextFromMimeMultipart(mimeMultipart);
-	    }
-	    return "";
+		if (message.isMimeType("text/plain")) {
+			return message.getContent().toString();
+		}
+		if (message.isMimeType("multipart/*")) {
+			MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
+			return getTextFromMimeMultipart(mimeMultipart);
+		}
+		return "";
 	}
 
-	private String getTextFromMimeMultipart(
-	        MimeMultipart mimeMultipart)  throws MessagingException, IOException{
-	    String result = "";
-	    for (int i = 0; i < mimeMultipart.getCount(); i++) {
-	        BodyPart bodyPart = mimeMultipart.getBodyPart(i);
-	        if (bodyPart.isMimeType("text/plain")) {
-	            return result + "\n" + bodyPart.getContent(); // without return, same text appears twice in my tests
-	        } 
-	        result += this.parseBodyPart(bodyPart);
-	    }
-	    return result;
+	private String getTextFromMimeMultipart(MimeMultipart mimeMultipart) throws MessagingException, IOException {
+		String result = "";
+		for (int i = 0; i < mimeMultipart.getCount(); i++) {
+			BodyPart bodyPart = mimeMultipart.getBodyPart(i);
+			if (bodyPart.isMimeType("text/plain")) {
+				return result + "\n" + bodyPart.getContent(); // without return, same text appears twice in my tests
+			}
+			result += this.parseBodyPart(bodyPart);
+		}
+		return result;
 	}
 
-	private String parseBodyPart(BodyPart bodyPart) throws MessagingException, IOException { 
-	    if (bodyPart.isMimeType("text/html")) {
-	        return "";
-	    } 
-	    if (bodyPart.getContent() instanceof MimeMultipart){
-	        return getTextFromMimeMultipart((MimeMultipart)bodyPart.getContent());
-	    }
+	private String parseBodyPart(BodyPart bodyPart) throws MessagingException, IOException {
+		if (bodyPart.isMimeType("text/html")) {
+			return "";
+		}
+		if (bodyPart.getContent() instanceof MimeMultipart) {
+			return getTextFromMimeMultipart((MimeMultipart) bodyPart.getContent());
+		}
 
-	    return "";
+		return "";
 	}
 
 }

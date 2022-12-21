@@ -34,6 +34,13 @@ public class MailReceiver {
 			Store store = emailSession.getStore("pop3s");
 			store.connect(serverAddress, username, password);
 
+//			Folder[] folders = store.getDefaultFolder().list("*");
+//		    for (Folder folder : folders) {
+//		        if ((folder.getType() & Folder.HOLDS_MESSAGES) != 0) {
+//		            System.out.println(folder.getFullName() + ": " + folder.getMessageCount());
+//		        }
+//		    }
+			
 			Folder inboxFolder = store.getFolder("INBOX");
 			if (inboxFolder == null) {
 				throw new Exception("Invalid folder");
@@ -42,8 +49,11 @@ public class MailReceiver {
 
 			Message[] messages = inboxFolder.getMessages();
 			System.out.println("DEBUG: Loading messages");
+			int i = 1;
 			for(Message m : messages) {
+				System.out.println(i+"/"+messages.length);
 				dH.saveMail(m);
+				i++;
 			}
 			inboxFolder.close(false);
 			store.close();

@@ -12,6 +12,7 @@ import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Store;
 
+import fsu.grumbach_hofmann.emailclientgui.util.Account;
 import fsu.grumbach_hofmann.emailclientgui.util.DataHandler;
 
 public class MailReceiver {
@@ -22,9 +23,12 @@ public class MailReceiver {
 		this.dH=dH;
 	}
 	
-	public void receiveMails(String serverAddress, String serverPort, String username, String password) {
+	public void receiveMails(Account acc) {
 		try {
-
+			String serverAddress = acc.getInbox();
+			int serverPort = acc.getInboxPort();
+			String username = acc.getUsername();
+			String password = acc.getPassword();
 			Properties properties = new Properties();
 			properties.put("mail.pop3.host", serverAddress);
 			properties.put("mail.pop3.port", serverPort);
@@ -52,9 +56,10 @@ public class MailReceiver {
 			int i = 1;
 			for(Message m : messages) {
 				System.out.println(i+"/"+messages.length);
-				dH.saveMail(m);
+				dH.saveMail(m, username);
 				i++;
 			}
+			dH.loadMails(acc);
 			inboxFolder.close(false);
 			store.close();
 		} catch (NoSuchProviderException e) {

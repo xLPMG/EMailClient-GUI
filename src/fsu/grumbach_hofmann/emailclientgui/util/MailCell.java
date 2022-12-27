@@ -56,7 +56,7 @@ public class MailCell extends ListCell<MailObject> {
         }
         else {
         	cellLabelSender.setText(mailObject.getFrom());
-        	cellLabelDate.setText(mailObject.getDateSent());
+        	cellLabelDate.setText(mailObject.getDateSent().toString());
         	cellLabelSubject.setText(mailObject.getSubject());
         	cellLabelContent.setText(mailObject.getPreview());
         	

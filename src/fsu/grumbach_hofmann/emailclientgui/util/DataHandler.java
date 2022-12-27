@@ -15,6 +15,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -33,22 +35,26 @@ public class DataHandler {
 	String os = "win";
 
 	private ArrayList<Account> accountList = new ArrayList<>();
-	private ArrayList<Message> emailList = new ArrayList<>();
-	private ArrayList<MailObject> mailObjectList = new ArrayList<>();
+
+	private HashMap<Account, ArrayList> emailMap = new HashMap<>();
+	private HashMap<Account, ArrayList> mailObjectMap = new HashMap<>();
+
 	private File programFolder;
 	private File userData;
 	private File emailFolder;
 	private AES aes;
 	private String keycode;
+	private MailUtils mU;
 
 	public DataHandler() {
 		os = System.getProperty("os.name").toLowerCase();
 		init();
 		loadAccountData();
-		loadMails();
+		loadAllMails();
 	}
 
 	private void init() {
+		mU = new MailUtils();
 		if (os.contains("win")) {
 			programFolder = new File(System.getenv("APPDATA") + "/JEMC-GrumHofm");
 			if (!programFolder.exists()) {
@@ -191,7 +197,12 @@ public class DataHandler {
 				return;
 			}
 		}
-		accountList.add(new Account(username, email, password, name, surname, serverIN, portIN, serverOUT, portOUT));
+		Account newAcc = new Account(username, email, password, name, surname, serverIN, portIN, serverOUT, portOUT);
+		accountList.add(newAcc);
+		ArrayList<Message> emailList = new ArrayList<Message>();
+		emailMap.put(newAcc, emailList);
+		ArrayList<MailObject> mailObjectList = new ArrayList<MailObject>();
+		mailObjectMap.put(newAcc, mailObjectList);
 		saveAccountData();
 	}
 
@@ -204,24 +215,43 @@ public class DataHandler {
 		saveAccountData();
 	}
 
-	public void saveMail(Message message) {
+	public Account getAccount(String username) {
+		for (Account acc : accountList) {
+			if (acc.getUsername().equals(username)) {
+				return acc;
+			}
+		}
+		return null;
+	}
+
+	public void saveMail(Message message, String username) {
 		try {
 			String fileNameRaw = message.getSentDate() + "-" + message.getFrom()[0] + ".eml";
 			String fileName = fileNameRaw.replace(" ", "_").replace("/", "|");
-			File mailFile = new File(emailFolder.getAbsolutePath() + "/" + fileName);
+			File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + username);
+			if (!userSubdirectory.exists()) {
+				userSubdirectory.mkdirs();
+			}
+			File mailFile = new File(userSubdirectory.getAbsolutePath() + "/" + fileName);
 			if (!mailFile.exists()) {
 				message.writeTo(new FileOutputStream(mailFile));
 			}
 		} catch (IOException | MessagingException e) {
 			e.printStackTrace();
 		}
-		loadMails();
 	}
 
-	public void loadMails() {
+	public void loadMails(Account acc) {
+		ArrayList<Message> emailList = emailMap.get(acc);
+		ArrayList<MailObject> mailObjectList = mailObjectMap.get(acc);
 		mailObjectList.clear();
 		emailList.clear();
-		for (File mailFile : emailFolder.listFiles()) {
+		File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + acc.getUsername());
+		if (!userSubdirectory.exists()) {
+			userSubdirectory.mkdirs();
+			return;
+		}
+		for (File mailFile : userSubdirectory.listFiles()) {
 			if (!mailFile.isDirectory()) {
 				Properties properties = new Properties();
 				properties.put("mail.pop3.host", "");
@@ -235,79 +265,38 @@ public class DataHandler {
 					emailList.add(m);
 
 					// create mail objects
-					Address[] froms = m.getFrom();
-					Address[] tos = m.getAllRecipients();
-					String from = froms == null ? null : ((InternetAddress) froms[0]).getAddress();
-					String recipients = "";
-					if (tos != null) {
-						for (Address to : tos) {
-							recipients += tos == null ? null : ((InternetAddress) to).getAddress();
-						}
-					} else {
-						recipients = "???";
-					}
-					String sentDate = m.getSentDate() == null ? "???"
-							: new SimpleDateFormat("dd.MM.yyyy hh:mm:ss").format(m.getSentDate());
-					if (m.getSentDate() != null) {
-						String content = getTextFromMessage(m);
-						LocalDate date = Instant.ofEpochMilli(m.getSentDate().getTime()).atZone(ZoneId.systemDefault())
-								.toLocalDate();
-						mailObjectList.add(new MailObject(m.getSubject(), "no", from, recipients, sentDate, content
-								.substring(0, Math.min(content.length(), 100)).replace("\n", " ").replace("\r", " "),
-								date));
-					}
+
+						mailObjectList.add(new MailObject(m, mU));
+					
 
 				} catch (MessagingException | IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
+		Collections.sort(mailObjectList);
+		emailMap.put(acc, emailList);
+		mailObjectMap.put(acc, mailObjectList);
+
 	}
 
-	public ArrayList<Message> getEmailList() {
-		return emailList;
-	}
-
-	public void setEmailList(ArrayList<Message> emailList) {
-		this.emailList = emailList;
-	}
-
-	public ArrayList<MailObject> getMailObjectList() {
-		return mailObjectList;
-	}
-
-	private String getTextFromMessage(Message message) throws MessagingException, IOException {
-		if (message.isMimeType("text/plain")) {
-			return message.getContent().toString();
-		}
-		if (message.isMimeType("multipart/*")) {
-			MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
-			return getTextFromMimeMultipart(mimeMultipart);
-		}
-		return "";
-	}
-
-	private String getTextFromMimeMultipart(MimeMultipart mimeMultipart) throws MessagingException, IOException {
-		String result = "";
-		for (int i = 0; i < mimeMultipart.getCount(); i++) {
-			BodyPart bodyPart = mimeMultipart.getBodyPart(i);
-			if (bodyPart.isMimeType("text/plain")) {
-				return result + "\n" + bodyPart.getContent(); // without return, same text appears twice in my tests
-			}
-			result += this.parseBodyPart(bodyPart);
-		}
-		return result;
-	}
-
-	private String parseBodyPart(BodyPart bodyPart) throws MessagingException, IOException {
-		if (bodyPart.isMimeType("text/html")) {
-			return "";
-		}
-		if (bodyPart.getContent() instanceof MimeMultipart) {
-			return getTextFromMimeMultipart((MimeMultipart) bodyPart.getContent());
+	public void loadAllMails() {
+		for (Account acc : accountList) {
+			loadMails(acc);
 		}
 
-		return "";
+	}
+
+	public ArrayList<Message> getEmailList(Account acc) {
+		return emailMap.get(acc);
+	}
+
+	public void setEmailList(ArrayList<Message> emailList, Account acc) {
+		emailMap.put(acc, emailList);
+	}
+
+	public ArrayList<MailObject> getMailObjectList(Account acc) {
+		return mailObjectMap.get(acc);
 	}
 
 }

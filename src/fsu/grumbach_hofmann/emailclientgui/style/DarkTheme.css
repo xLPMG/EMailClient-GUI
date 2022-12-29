@@ -16,8 +16,8 @@
 
 .primarylabel {
     -fx-font-family: "Segoe UI Semibold";
-    -fx-text-fill: #FFFFFFFF;
-    -fx-opacity: 0.6;
+    -fx-text-fill: white;
+    -fx-opacity: 1;
 }
 
 .secondaryLabel {
@@ -29,13 +29,17 @@
 .tertiaryLabel {
     -fx-font-family: "Segoe UI Semibold";
     -fx-text-fill: #EBEBF54D;
-    -fx-opacity: 0.6;
+    -fx-opacity: 1;
 }
 
 .quaternaryLabel {
     -fx-font-family: "Segoe UI Semibold";
     -fx-text-fill: #EBEBF52E;
     -fx-opacity: 1;
+}
+
+.highlightLabel {
+	 -fx-text-fill: #0A84FF;
 }
 
 .separator {

@@ -43,11 +43,11 @@
                   </ChoiceBox>
                </children>
             </VBox>
-            <BorderPane prefHeight="700.0" styleClass="background" HBox.hgrow="ALWAYS">
+            <BorderPane prefHeight="700.0" HBox.hgrow="ALWAYS">
                <top>
                   <MenuBar id="menubar" minHeight="25.0" styleClass="systemBackground" BorderPane.alignment="CENTER">
                      <menus>
-                        <Menu fx:id="accountsMenuItem" mnemonicParsing="false" styleClass="label" text="Settings">
+                        <Menu fx:id="accountsMenuItem" mnemonicParsing="false" text="Settings">
                           <items>
                             <MenuItem fx:id="addAccountItem" mnemonicParsing="false" text="Add account" />
                               <MenuItem fx:id="removeAccountItem" mnemonicParsing="false" text="Remove account" />

@@ -1,5 +1,7 @@
 package fsu.grumbach_hofmann.emailclientgui.application;
 
+import java.io.IOException;
+
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailReceiver;
 import fsu.grumbach_hofmann.emailclientgui.util.Account;
@@ -101,6 +103,22 @@ public class MainWindow extends Application {
 			        });
 			    }).start();
 			}
+		});
+		
+		btnWriteMail.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent event) {
+		        try {
+		        	Parent root = FXMLLoader
+							.load(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/SendScene.fxml"));
+		            Stage stage = new Stage();
+		            stage.setTitle("Write mail");
+		            stage.setScene(new Scene(root, 450, 450));
+		            stage.show();
+		        }
+		        catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		    }
 		});
 		
 		Image btnReceiveMailsImg = new Image("receiveIcon.png");

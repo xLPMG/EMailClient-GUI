@@ -20,7 +20,7 @@
                   <Button fx:id="sendSendMail" mnemonicParsing="false" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="600.0">
+            <HBox prefHeight="33.0" prefWidth="600.0" VBox.vgrow="NEVER">
                <children>
                   <Label styleClass="primarylabel" text="To:">
                      <HBox.margin>
@@ -34,12 +34,12 @@
                   </TextField>
                </children>
             </HBox>
-            <Separator opacity="0.5" prefWidth="200.0">
+            <Separator opacity="0.5" prefWidth="200.0" VBox.vgrow="NEVER">
                <VBox.margin>
                   <Insets left="10.0" />
                </VBox.margin>
             </Separator>
-            <HBox alignment="CENTER_LEFT">
+            <HBox VBox.vgrow="NEVER">
                <children>
                   <Label styleClass="primarylabel" text="CC:">
                      <HBox.margin>
@@ -53,12 +53,12 @@
                   </TextField>
                </children>
             </HBox>
-            <Separator opacity="0.5" prefWidth="200.0">
+            <Separator opacity="0.5" prefWidth="200.0" VBox.vgrow="NEVER">
                <VBox.margin>
                   <Insets left="10.0" />
                </VBox.margin>
             </Separator>
-            <HBox alignment="CENTER_LEFT">
+            <HBox VBox.vgrow="NEVER">
                <children>
                   <Label styleClass="primarylabel" text="Subject:">
                      <HBox.margin>
@@ -72,12 +72,12 @@
                   </TextField>
                </children>
             </HBox>
-            <Separator opacity="0.5" prefWidth="200.0">
+            <Separator opacity="0.5" prefWidth="200.0" VBox.vgrow="NEVER">
                <VBox.margin>
                   <Insets left="10.0" />
                </VBox.margin>
             </Separator>
-            <HBox alignment="CENTER_LEFT">
+            <HBox VBox.vgrow="NEVER">
                <children>
                   <Label styleClass="primarylabel" text="From:">
                      <HBox.margin>
@@ -91,7 +91,7 @@
                   </TextField>
                </children>
             </HBox>
-            <Separator opacity="0.5" prefWidth="200.0">
+            <Separator opacity="0.5" prefWidth="200.0" VBox.vgrow="NEVER">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>

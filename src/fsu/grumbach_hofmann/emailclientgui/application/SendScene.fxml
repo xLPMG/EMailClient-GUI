@@ -99,7 +99,7 @@
                   <Insets left="10.0" />
                </VBox.margin>
             </Separator>
-            <TextArea fx:id="sendMessageTextArea" VBox.vgrow="ALWAYS">
+            <TextArea fx:id="sendMessageTextArea" styleClass="primarylabel" wrapText="true" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="10.0" />
                </VBox.margin>

@@ -24,10 +24,10 @@
                <children>
                   <Label styleClass="primarylabel" text="To:">
                      <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="10.0" top="10.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="sendToTextField" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="sendToTextField" style="-fx-background-color: transparent;" styleClass="primarylabel" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -43,10 +43,10 @@
                <children>
                   <Label styleClass="primarylabel" text="CC:">
                      <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="10.0" top="10.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="sendCopyTextField" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="sendCopyTextField" style="-fx-background-color: transparent;" styleClass="primarylabel" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -62,10 +62,10 @@
                <children>
                   <Label styleClass="primarylabel" text="Subject:">
                      <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="10.0" top="10.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="sendSubjectTextField" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="sendSubjectTextField" style="-fx-background-color: transparent;" styleClass="primarylabel" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -81,10 +81,10 @@
                <children>
                   <Label styleClass="primarylabel" text="From:">
                      <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="10.0" top="10.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="sendFromTextField" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="sendFromTextField" style="-fx-background-color: transparent;" styleClass="primarylabel" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>

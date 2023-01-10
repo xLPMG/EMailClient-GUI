@@ -1,9 +1,8 @@
 package fsu.grumbach_hofmann.emailclientgui.application;
 
-import java.io.IOException;
-
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailReceiver;
+import fsu.grumbach_hofmann.emailclientgui.mail.MailSender;
 import fsu.grumbach_hofmann.emailclientgui.util.Account;
 import fsu.grumbach_hofmann.emailclientgui.util.DataHandler;
 import fsu.grumbach_hofmann.emailclientgui.util.MailCellFactory;
@@ -20,6 +19,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -29,8 +30,10 @@ public class MainWindow extends Application {
 
 	private DataHandler handler;
 	private MailReceiver receiver;
+	private MailSender sender;
 	private Account selectedAccount;
 	private Scene scene;
+	private Scene sendScene;
 
 	// fxml elements
 	private ChoiceBox<String> accountsDropdown;
@@ -42,10 +45,15 @@ public class MainWindow extends Application {
 
 	private Button btnReceiveMails, btnWriteMail;
 
+	private TextField sendToTextField, sendCopyTextField, sendSubjectTextField, sendFromTextField;
+	private TextArea sendMessageTextArea;
+	private Button btnSendMail;
+
 	@Override
 	public void init() {
 		handler = new DataHandler();
 		receiver = new MailReceiver(handler);
+		sender = new MailSender();
 	}
 
 	@Override
@@ -62,12 +70,16 @@ public class MainWindow extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
+			Parent sendRoot = FXMLLoader
+					.load(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/SendScene.fxml"));
+			sendScene = new Scene(sendRoot);
+
 			postInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void postInit() {
 		initFXMLElements();
 		initAccountList();
@@ -90,49 +102,69 @@ public class MainWindow extends Application {
 		btnReceiveMails = (Button) scene.lookup("#btnReceiveMails");
 		btnWriteMail = (Button) scene.lookup("#btnWriteMail");
 
+		sendToTextField = (TextField) sendScene.lookup("#sendToTextField");
+		sendCopyTextField = (TextField) sendScene.lookup("#sendCopyTextField");
+		sendSubjectTextField = (TextField) sendScene.lookup("#sendSubjectTextField");
+		sendFromTextField = (TextField) sendScene.lookup("#sendFromTextField");
+		sendMessageTextArea = (TextArea) sendScene.lookup("#sendMessageTextArea");
+
+		btnSendMail = (Button) sendScene.lookup("#btnSendMail");
+
 		btnReceiveMails.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				if(selectedAccount==null)
+				if (selectedAccount == null)
 					return;
-				inboxLabel.setText("Inbox - " + selectedAccount.getEmail()+" - receiving mails...");
+				inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
 				new Thread(() -> {
 					receiver.receiveMails(selectedAccount);
-			        Platform.runLater(() -> {
-			            updateMessagesList();
-			        });
-			    }).start();
+					Platform.runLater(() -> {
+						updateMessagesList();
+					});
+				}).start();
 			}
 		});
-		
+
 		btnWriteMail.setOnAction(new EventHandler<ActionEvent>() {
-		    public void handle(ActionEvent event) {
-		        try {
-		        	Parent root = FXMLLoader
-							.load(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/SendScene.fxml"));
-		            Stage stage = new Stage();
-		            stage.setTitle("Write mail");
-		            stage.setScene(new Scene(root, 450, 450));
-		            stage.show();
-		        }
-		        catch (IOException e) {
-		            e.printStackTrace();
-		        }
-		    }
+			public void handle(ActionEvent event) {
+				if (selectedAccount != null) {
+					Stage stage = new Stage();
+					stage.setTitle("Write mail");
+					stage.setScene(sendScene);
+					sendFromTextField.setText(selectedAccount.getEmail());
+					stage.show();
+				}
+			}
 		});
-		
+
+		btnSendMail.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				if (selectedAccount != null) {
+					sender.sendMail(selectedAccount, sendSubjectTextField.getText(), sendCopyTextField.getText(),
+							sendToTextField.getText(), sendFromTextField.getText(), sendMessageTextArea.getText());
+				}
+			}
+		});
+
 		Image btnReceiveMailsImg = new Image("receiveIcon.png");
-	    ImageView btnReceiveMailsImgView = new ImageView(btnReceiveMailsImg);
-	    btnReceiveMailsImgView.setFitHeight(btnReceiveMails.getHeight());
-	    btnReceiveMailsImgView.setPreserveRatio(true);
-	    
-	    Image btnWriteNewMailImg = new Image("writeIcon.png");
-	    ImageView btnWriteNewMailImgView = new ImageView(btnWriteNewMailImg);
-	    btnWriteNewMailImgView.setFitHeight(btnWriteMail.getHeight());
-	    btnWriteNewMailImgView.setPreserveRatio(true);
-	    
-	    btnReceiveMails.setGraphic(btnReceiveMailsImgView);
-	    btnWriteMail.setGraphic(btnWriteNewMailImgView);
+		ImageView btnReceiveMailsImgView = new ImageView(btnReceiveMailsImg);
+		btnReceiveMailsImgView.setFitHeight(btnReceiveMails.getHeight());
+		btnReceiveMailsImgView.setPreserveRatio(true);
+
+		Image btnWriteNewMailImg = new Image("writeIcon.png");
+		ImageView btnWriteNewMailImgView = new ImageView(btnWriteNewMailImg);
+		btnWriteNewMailImgView.setFitHeight(btnWriteMail.getHeight());
+		btnWriteNewMailImgView.setPreserveRatio(true);
+		
+		Image btnSendNewMailImg = new Image("sendIcon.png");
+		ImageView btnSendNewMailImgView = new ImageView(btnSendNewMailImg);
+		btnSendNewMailImgView.setFitHeight(btnSendMail.getHeight());
+		btnSendNewMailImgView.setPreserveRatio(true);
+
+		btnReceiveMails.setGraphic(btnReceiveMailsImgView);
+		btnWriteMail.setGraphic(btnWriteNewMailImgView);
+		btnSendMail.setGraphic(btnSendNewMailImgView);
+
 	}
 
 	private void initAccountList() {
@@ -150,13 +182,13 @@ public class MainWindow extends Application {
 						handler.loadMails(acc);
 						updateMessagesList();
 						// TODO: dont receive all new mails on account switch?
-						inboxLabel.setText("Inbox - " + selectedAccount.getEmail()+" - receiving mails...");
+						inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
 						new Thread(() -> {
 							receiver.receiveMails(selectedAccount);
-					        Platform.runLater(() -> {
-					            updateMessagesList();
-					        });
-					    }).start();
+							Platform.runLater(() -> {
+								updateMessagesList();
+							});
+						}).start();
 					}
 				}
 			}

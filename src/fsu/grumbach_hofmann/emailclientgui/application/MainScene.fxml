@@ -19,11 +19,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="mainContainer" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0">
+      <HBox VBox.vgrow="ALWAYS">
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="250.0" styleClass="systemBackground">
+            <VBox alignment="TOP_CENTER" styleClass="systemBackground">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" styleClass="primarylabel" text="Accounts">
                      <font>
@@ -33,7 +33,7 @@
                         <Insets bottom="10.0" top="40.0" />
                      </padding>
                   </Label>
-                  <ChoiceBox id="accountsDropdown" fx:id="accountsDropdown" prefWidth="150.0" styleClass="button">
+                  <ChoiceBox id="accountsDropdown" fx:id="accountsDropdown" minWidth="100.0">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -43,7 +43,7 @@
                   </ChoiceBox>
                </children>
             </VBox>
-            <BorderPane prefHeight="700.0" HBox.hgrow="ALWAYS">
+            <BorderPane HBox.hgrow="ALWAYS">
                <top>
                   <MenuBar id="menubar" minHeight="25.0" styleClass="systemBackground" BorderPane.alignment="CENTER">
                      <menus>
@@ -57,9 +57,13 @@
                   </MenuBar>
                </top>
                <bottom>
-                  <Pane prefHeight="25.0" prefWidth="900.0" styleClass="secondarySystemBackground" BorderPane.alignment="CENTER_RIGHT">
+                  <Pane nodeOrientation="RIGHT_TO_LEFT" styleClass="secondarySystemBackground">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="455.0" layoutY="4.0" styleClass="secondaryLabel" text="Luca-Philipp Grumbach &amp; Richard Hofmann, 2022-23" />
+                        <AnchorPane>
+                           <children>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="secondaryLabel" text="Luca-Philipp Grumbach &amp; Richard Hofmann, 2022-23" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
                      </children>
                   </Pane>
                </bottom>

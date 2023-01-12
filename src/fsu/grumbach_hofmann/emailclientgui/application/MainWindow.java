@@ -61,7 +61,7 @@ public class MainWindow extends Application {
 		try {
 			Parent root = FXMLLoader
 					.load(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/MainScene.fxml"));
-			scene = new Scene(root);
+			scene = new Scene(root, 1000, 700);
 			scene.getStylesheets().add(getClass()
 					.getResource("/fsu/grumbach_hofmann/emailclientgui/style/MainScene.css").toExternalForm());
 			scene.getStylesheets().add(getClass()
@@ -87,6 +87,7 @@ public class MainWindow extends Application {
 	}
 
 	private void initFXMLElements() {
+		//declare elements
 		inboxLabel = (Label) scene.lookup("#inboxLabel");
 		totalMessagesLabel = (Label) scene.lookup("#totalMessagesLabel");
 		accountsDropdown = (ChoiceBox) scene.lookup("#accountsDropdown");
@@ -110,6 +111,7 @@ public class MainWindow extends Application {
 
 		btnSendMail = (Button) sendScene.lookup("#btnSendMail");
 
+		//set button listeners
 		btnReceiveMails.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
@@ -133,6 +135,14 @@ public class MainWindow extends Application {
 					stage.setScene(sendScene);
 					sendFromTextField.setText(selectedAccount.getEmail());
 					stage.show();
+					
+					//declare button image after stage is shown to determine actual button size
+					Image btnSendNewMailImg = new Image("sendIcon.png");
+					ImageView btnSendNewMailImgView = new ImageView(btnSendNewMailImg);
+					System.out.println(btnSendMail.getHeight());
+					btnSendNewMailImgView.setFitHeight(btnSendMail.getHeight());
+					btnSendNewMailImgView.setPreserveRatio(true);
+					btnSendMail.setGraphic(btnSendNewMailImgView);
 				}
 			}
 		});
@@ -155,16 +165,9 @@ public class MainWindow extends Application {
 		ImageView btnWriteNewMailImgView = new ImageView(btnWriteNewMailImg);
 		btnWriteNewMailImgView.setFitHeight(btnWriteMail.getHeight());
 		btnWriteNewMailImgView.setPreserveRatio(true);
-		
-		Image btnSendNewMailImg = new Image("sendIcon.png");
-		ImageView btnSendNewMailImgView = new ImageView(btnSendNewMailImg);
-		btnSendNewMailImgView.setFitHeight(btnSendMail.getHeight());
-		btnSendNewMailImgView.setPreserveRatio(true);
 
 		btnReceiveMails.setGraphic(btnReceiveMailsImgView);
 		btnWriteMail.setGraphic(btnWriteNewMailImgView);
-		btnSendMail.setGraphic(btnSendNewMailImgView);
-
 	}
 
 	private void initAccountList() {

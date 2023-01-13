@@ -1,5 +1,8 @@
 package fsu.grumbach_hofmann.emailclientgui.application;
 
+import javax.mail.Flags;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import java.awt.Font;
 
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
@@ -231,7 +234,18 @@ public class MainWindow extends Application {
 				subjectLabel.setText(newSelection.getSubject());
 				recipientsLabel.setText(newSelection.getTo());
 				contentLabel.setText(newSelection.getContent());
-
+				
+				Message message = newSelection.getMessage();
+		
+				try {
+					if (!message.isSet(Flags.Flag.SEEN)) {
+						message.setFlag(Flags.Flag.SEEN, true);
+					}
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+				
+				
 				senderLabel.setWrapText(false);
 				dateLabel.setWrapText(false);
 				senderLabel.maxWidthProperty().bind(messagesList.widthProperty().divide(2));

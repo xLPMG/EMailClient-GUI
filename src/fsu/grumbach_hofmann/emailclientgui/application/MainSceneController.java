@@ -67,7 +67,10 @@ public class MainSceneController {
 
     @FXML
     private Label totalMessagesLabel;
-    
-    
+
+	public MenuItem getAddAccountItem() {
+		return addAccountItem;
+	}
+ 
 }
 

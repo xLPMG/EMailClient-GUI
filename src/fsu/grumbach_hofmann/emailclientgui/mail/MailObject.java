@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 
 import javax.mail.Address;
+import javax.mail.Flags.Flag;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -16,9 +17,12 @@ public class MailObject implements Comparable<MailObject> {
 
 	private String subject, read, from, to, content, preview, html;
 	private LocalDate dateSent;
+	public Flag getFlags;
+	private Message message;
 
 	public MailObject(Message message, MailUtils mailUtils) {
 		try {
+			this.message = message;
 			subject = message.getSubject();
 			read = "no";
 			Address[] froms = message.getFrom();
@@ -114,5 +118,14 @@ public class MailObject implements Comparable<MailObject> {
 
 	public void setHtml(String html) {
 		this.html = html;
+	}
+	
+	public Message getMessage() {
+		return message;
+	}
+
+	public void setFlag(Flag seen, boolean b) {
+		// TODO Auto-generated method stub
+		
 	}
 }

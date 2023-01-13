@@ -2,6 +2,10 @@ package fsu.grumbach_hofmann.emailclientgui.util;
 
 import java.io.IOException;
 
+import javax.mail.Flags;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -73,8 +77,23 @@ public class MailCell extends ListCell<MailObject> {
         	cellLabelContent.setWrapText(true);
         	cellLabelContent.maxWidthProperty().bind(this.widthProperty().subtract(30));
         	
+        	Message message = mailObject.getMessage();
+        	try {
+				if (!message.isSet(Flags.Flag.SEEN)) {
+					cellLabelSender.getStyleClass().add("message-unseen");
+				}else {
+					cellLabelSender.getStyleClass().remove("message-unseen");
+				}
+				
+				
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         	setGraphic(cellMainPane);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            
+           
         }
     }
 }

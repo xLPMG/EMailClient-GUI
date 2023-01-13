@@ -34,6 +34,8 @@ public class MainWindow extends Application {
 	private Account selectedAccount;
 	private Scene scene;
 	private Scene sendScene;
+	private Scene newAccountScene;
+	private MainSceneController mainSceneController;
 
 	// fxml elements
 	private ChoiceBox<String> accountsDropdown;
@@ -59,8 +61,8 @@ public class MainWindow extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader
-					.load(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/MainScene.fxml"));
+			FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/MainScene.fxml"));
+			Parent root = rootLoader.load();
 			scene = new Scene(root, 1000, 700);
 			scene.getStylesheets().add(getClass()
 					.getResource("/fsu/grumbach_hofmann/emailclientgui/style/MainScene.css").toExternalForm());
@@ -73,7 +75,12 @@ public class MainWindow extends Application {
 			Parent sendRoot = FXMLLoader
 					.load(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/SendScene.fxml"));
 			sendScene = new Scene(sendRoot);
+			
+			Parent newAccountRoot = FXMLLoader
+					.load(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/NewAccountScene.fxml"));
+			newAccountScene = new Scene(newAccountRoot);
 
+			mainSceneController = rootLoader.getController();
 			postInit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,7 +109,7 @@ public class MainWindow extends Application {
 
 		btnReceiveMails = (Button) scene.lookup("#btnReceiveMails");
 		btnWriteMail = (Button) scene.lookup("#btnWriteMail");
-
+		
 		sendToTextField = (TextField) sendScene.lookup("#sendToTextField");
 		sendCopyTextField = (TextField) sendScene.lookup("#sendCopyTextField");
 		sendSubjectTextField = (TextField) sendScene.lookup("#sendSubjectTextField");
@@ -167,7 +174,7 @@ public class MainWindow extends Application {
 		btnWriteNewMailImgView.setPreserveRatio(true);
 
 		btnReceiveMails.setGraphic(btnReceiveMailsImgView);
-		btnWriteMail.setGraphic(btnWriteNewMailImgView);
+		btnWriteMail.setGraphic(btnWriteNewMailImgView);		
 	}
 
 	private void initAccountList() {

@@ -241,6 +241,22 @@ public class DataHandler {
 		}
 	}
 
+	public void saveMailOverride(Message message, String username) {
+		try {
+			String fileNameRaw = message.getSentDate() + "-" + message.getFrom()[0] + ".eml";
+			String fileName = fileNameRaw.replace(" ", "_").replace("/", "|");
+			File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + username);
+			if (!userSubdirectory.exists()) {
+				userSubdirectory.mkdirs();
+			}
+			File mailFile = new File(userSubdirectory.getAbsolutePath() + "/" + fileName);
+			message.writeTo(new FileOutputStream(mailFile));
+
+		} catch (IOException | MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void loadMails(Account acc) {
 		ArrayList<Message> emailList = emailMap.get(acc);
 		ArrayList<MailObject> mailObjectList = mailObjectMap.get(acc);
@@ -266,8 +282,7 @@ public class DataHandler {
 
 					// create mail objects
 
-						mailObjectList.add(new MailObject(m, mU));
-					
+					mailObjectList.add(new MailObject(m, mU));
 
 				} catch (MessagingException | IOException e) {
 					e.printStackTrace();

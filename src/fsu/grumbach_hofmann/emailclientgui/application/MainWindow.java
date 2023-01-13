@@ -1,5 +1,7 @@
 package fsu.grumbach_hofmann.emailclientgui.application;
 
+import java.awt.Font;
+
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailReceiver;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailSender;
@@ -19,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -34,6 +37,8 @@ public class MainWindow extends Application {
 	private Account selectedAccount;
 	private Scene scene;
 	private Scene sendScene;
+	private Scene newAccountScene;
+	private MainSceneController mainSceneController;
 
 	// fxml elements
 	private ChoiceBox<String> accountsDropdown;
@@ -44,6 +49,8 @@ public class MainWindow extends Application {
 	private Label senderLabel, dateLabel, subjectLabel, recipientsLabel, contentLabel;
 
 	private Button btnReceiveMails, btnWriteMail;
+	
+	private MenuItem addAccountItem;
 
 	private TextField sendToTextField, sendCopyTextField, sendSubjectTextField, sendFromTextField;
 	private TextArea sendMessageTextArea;
@@ -59,8 +66,9 @@ public class MainWindow extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader
-					.load(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/MainScene.fxml"));
+			FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/MainScene.fxml"));
+			Parent root = rootLoader.load();
+			mainSceneController = rootLoader.getController();
 			scene = new Scene(root, 1000, 700);
 			scene.getStylesheets().add(getClass()
 					.getResource("/fsu/grumbach_hofmann/emailclientgui/style/MainScene.css").toExternalForm());
@@ -70,10 +78,14 @@ public class MainWindow extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
-			Parent sendRoot = FXMLLoader
-					.load(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/SendScene.fxml"));
+			FXMLLoader sendLoader = new FXMLLoader(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/SendScene.fxml"));
+			Parent sendRoot = sendLoader.load();
 			sendScene = new Scene(sendRoot);
-
+			
+			FXMLLoader newAccountLoader = new FXMLLoader(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/NewAccountScene.fxml"));
+			Parent newAccountRoot = newAccountLoader.load();
+			newAccountScene = new Scene(newAccountRoot);
+			
 			postInit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,7 +114,9 @@ public class MainWindow extends Application {
 
 		btnReceiveMails = (Button) scene.lookup("#btnReceiveMails");
 		btnWriteMail = (Button) scene.lookup("#btnWriteMail");
-
+		
+		addAccountItem = mainSceneController.getAddAccountItem();
+		
 		sendToTextField = (TextField) sendScene.lookup("#sendToTextField");
 		sendCopyTextField = (TextField) sendScene.lookup("#sendCopyTextField");
 		sendSubjectTextField = (TextField) sendScene.lookup("#sendSubjectTextField");
@@ -168,6 +182,15 @@ public class MainWindow extends Application {
 
 		btnReceiveMails.setGraphic(btnReceiveMailsImgView);
 		btnWriteMail.setGraphic(btnWriteNewMailImgView);
+		
+		addAccountItem.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				Stage stage = new Stage();
+				stage.setTitle("Add new account");
+				stage.setScene(newAccountScene);
+				stage.show();
+			}
+		});
 	}
 
 	private void initAccountList() {
@@ -201,7 +224,7 @@ public class MainWindow extends Application {
 	private void initMessagesList() {
 		messagesList.setCellFactory(new MailCellFactory());
 		messagesList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-			if (newSelection != null) {
+			if (newSelection != null) {				
 				messageDisplayPane.setVisible(true);
 				senderLabel.setText(newSelection.getFrom());
 				dateLabel.setText(newSelection.getDateSent().toString());

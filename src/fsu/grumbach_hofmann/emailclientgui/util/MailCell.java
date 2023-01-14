@@ -59,6 +59,12 @@ public class MailCell extends ListCell<MailObject> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }
         else {
+        	if (mailObject.isSeen()) {
+				cellLabelSender.getStyleClass().remove("message-unseen");
+			}else {
+				cellLabelSender.getStyleClass().add("message-unseen");
+			}
+        	
         	cellLabelSender.setText(mailObject.getFrom());
         	cellLabelDate.setText(mailObject.getDateSent().toString());
         	cellLabelSubject.setText(mailObject.getSubject());
@@ -76,20 +82,7 @@ public class MailCell extends ListCell<MailObject> {
         	
         	cellLabelContent.setWrapText(true);
         	cellLabelContent.maxWidthProperty().bind(this.widthProperty().subtract(30));
-        	
-        	Message message = mailObject.getMessage();
-        	try {
-				if (!message.isSet(Flags.Flag.SEEN)) {
-					cellLabelSender.getStyleClass().add("message-unseen");
-				}else {
-					cellLabelSender.getStyleClass().remove("message-unseen");
-				}
-				
-				
-			} catch (MessagingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+     
         	setGraphic(cellMainPane);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             

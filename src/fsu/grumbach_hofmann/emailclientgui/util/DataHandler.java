@@ -1,32 +1,24 @@
 package fsu.grumbach_hofmann.emailclientgui.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Properties;
 
-import javax.mail.Address;
-import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 
@@ -35,9 +27,8 @@ public class DataHandler {
 	String os = "win";
 
 	private ArrayList<Account> accountList = new ArrayList<>();
-
-	private HashMap<Account, ArrayList> emailMap = new HashMap<>();
-	private HashMap<Account, ArrayList> mailObjectMap = new HashMap<>();
+	private HashMap<Account, ArrayList> mailListMap = new HashMap<>();
+	private HashMap<Account, Integer> unseenMessageCount = new HashMap<Account, Integer>();
 
 	private File programFolder;
 	private File userData;
@@ -199,16 +190,15 @@ public class DataHandler {
 		}
 		Account newAcc = new Account(username, email, password, name, surname, serverIN, portIN, serverOUT, portOUT);
 		accountList.add(newAcc);
-		ArrayList<Message> emailList = new ArrayList<Message>();
-		emailMap.put(newAcc, emailList);
-		ArrayList<MailObject> mailObjectList = new ArrayList<MailObject>();
-		mailObjectMap.put(newAcc, mailObjectList);
+		ArrayList<MailObject> mailList = new ArrayList<MailObject>();
+		mailListMap.put(newAcc, mailList);
 		saveAccountData();
 	}
 
 	public void removeAccount(String username) {
 		for (Account acc : accountList) {
 			if (acc.getUsername().equals(username)) {
+				deleteAccountData(acc);
 				accountList.remove(acc);
 			}
 		}
@@ -224,24 +214,11 @@ public class DataHandler {
 		return null;
 	}
 
-	public void saveMail(Message message, String username) {
-		try {
-			String fileNameRaw = message.getSentDate() + "-" + message.getFrom()[0] + ".eml";
-			String fileName = fileNameRaw.replace(" ", "_").replace("/", "|");
-			File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + username);
-			if (!userSubdirectory.exists()) {
-				userSubdirectory.mkdirs();
-			}
-			File mailFile = new File(userSubdirectory.getAbsolutePath() + "/" + fileName);
-			if (!mailFile.exists()) {
-				message.writeTo(new FileOutputStream(mailFile));
-			}
-		} catch (IOException | MessagingException e) {
-			e.printStackTrace();
-		}
+	private void deleteAccountData(Account account) {
+		// TODO
 	}
 
-	public void saveMailOverride(Message message, String username) {
+	public void saveMail(Message message, String username, boolean force) {
 		try {
 			String fileNameRaw = message.getSentDate() + "-" + message.getFrom()[0] + ".eml";
 			String fileName = fileNameRaw.replace(" ", "_").replace("/", "|");
@@ -250,25 +227,31 @@ public class DataHandler {
 				userSubdirectory.mkdirs();
 			}
 			File mailFile = new File(userSubdirectory.getAbsolutePath() + "/" + fileName);
-			message.writeTo(new FileOutputStream(mailFile));
-
+			if (force) {
+				message.writeTo(new FileOutputStream(mailFile));
+			} else {
+				if (!mailFile.exists()) {
+					message.writeTo(new FileOutputStream(mailFile));
+				}
+			}
 		} catch (IOException | MessagingException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void loadMails(Account acc) {
-		ArrayList<Message> emailList = emailMap.get(acc);
-		ArrayList<MailObject> mailObjectList = mailObjectMap.get(acc);
-		mailObjectList.clear();
-		emailList.clear();
+		ArrayList<MailObject> mailList = mailListMap.get(acc);
+		mailList.clear();
+		unseenMessageCount.put(acc, 0);
 		File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + acc.getUsername());
 		if (!userSubdirectory.exists()) {
 			userSubdirectory.mkdirs();
 			return;
 		}
+
 		for (File mailFile : userSubdirectory.listFiles()) {
 			if (!mailFile.isDirectory()) {
+
 				Properties properties = new Properties();
 				properties.put("mail.pop3.host", "");
 				properties.put("mail.pop3.port", "");
@@ -278,40 +261,68 @@ public class DataHandler {
 				try {
 					InputStream source = new FileInputStream(mailFile);
 					MimeMessage m = new MimeMessage(emailSession, source);
-					emailList.add(m);
-
-					// create mail objects
-
-					mailObjectList.add(new MailObject(m, mU));
-
+					boolean isSeen = isMessageSeen(m, acc);
+					MailObject newMO = new MailObject(m, mU, isSeen);
+					mailList.add(newMO);
+					if (!isSeen) {
+						unseenMessageCount.put(acc, unseenMessageCount.getOrDefault(acc, 0) + 1);
+					}
 				} catch (MessagingException | IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		Collections.sort(mailObjectList);
-		emailMap.put(acc, emailList);
-		mailObjectMap.put(acc, mailObjectList);
+		Collections.sort(mailList);
+		mailListMap.put(acc, mailList);
 
 	}
 
+	private boolean isMessageSeen(Message message, Account account) {
+		try {
+			String[] seenHeader = message.getHeader("Seen");
+			return seenHeader[0].equalsIgnoreCase("true") ? true : false; 
+		} catch (Exception e) {
+			try {
+				System.out.println("no header found");
+				message.addHeader("Seen", "false");
+				saveMail(message, account.getUsername(), true);
+				return false;
+			} catch (MessagingException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	public void updateSeen(MailObject mailObject, Account account, boolean seen) {
+		Message message = mailObject.getMessage();
+		if (isMessageSeen(message, account) != seen) {
+			try {
+				message.setHeader("Seen", seen + "");
+				mailObject.setSeen(seen);
+				saveMail(message, account.getUsername(), true);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		}	
+		if(seen) {
+			unseenMessageCount.put(account, unseenMessageCount.getOrDefault(account, 1) - 1);
+		}
+	}
+
 	public void loadAllMails() {
-		for (Account acc : accountList) {
-			loadMails(acc);
+		for (Account account : accountList) {
+			loadMails(account);
 		}
 
 	}
 
-	public ArrayList<Message> getEmailList(Account acc) {
-		return emailMap.get(acc);
+	public ArrayList<MailObject> getMailList(Account account) {
+		return mailListMap.get(account);
 	}
 
-	public void setEmailList(ArrayList<Message> emailList, Account acc) {
-		emailMap.put(acc, emailList);
-	}
-
-	public ArrayList<MailObject> getMailObjectList(Account acc) {
-		return mailObjectMap.get(acc);
+	public int getUnseenMessageCount(Account account) {
+		return unseenMessageCount.getOrDefault(account, 0);
 	}
 
 }

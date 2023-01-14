@@ -53,11 +53,11 @@ public class MailReceiver {
 
 			Message[] messages = inboxFolder.getMessages();
 			System.out.println("DEBUG: Loading messages");
-			int i = 1;
-			for(Message m : messages) {
-				System.out.println(i+"/"+messages.length);
-				dH.saveMail(m, username);
-				i++;
+			int i = messages.length-1;
+			while(i>0) {
+//				System.out.println((messages.length-i)+"/"+messages.length);
+				dH.saveMail(messages[i], username, false);
+				i--;
 			}
 			dH.loadMails(acc);
 			inboxFolder.close(false);

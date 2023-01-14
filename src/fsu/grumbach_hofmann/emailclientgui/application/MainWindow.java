@@ -134,6 +134,7 @@ public class MainWindow extends Application {
 			public void handle(ActionEvent e) {
 				if (selectedAccount == null)
 					return;
+				handler.loadMails(selectedAccount);
 				inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
 				new Thread(() -> {
 					receiver.receiveMails(selectedAccount);
@@ -227,25 +228,16 @@ public class MainWindow extends Application {
 	private void initMessagesList() {
 		messagesList.setCellFactory(new MailCellFactory());
 		messagesList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-			if (newSelection != null) {				
+			if (newSelection != null) {		
+				handler.updateSeen(newSelection, selectedAccount, true);
+				
 				messageDisplayPane.setVisible(true);
 				senderLabel.setText(newSelection.getFrom());
 				dateLabel.setText(newSelection.getDateSent().toString());
 				subjectLabel.setText(newSelection.getSubject());
 				recipientsLabel.setText(newSelection.getTo());
 				contentLabel.setText(newSelection.getContent());
-				
-				Message message = newSelection.getMessage();
 		
-				try {
-					if (!message.isSet(Flags.Flag.SEEN)) {
-						message.setFlag(Flags.Flag.SEEN, true);
-					}
-				} catch (MessagingException e) {
-					e.printStackTrace();
-				}
-				
-				
 				senderLabel.setWrapText(false);
 				dateLabel.setWrapText(false);
 				senderLabel.maxWidthProperty().bind(messagesList.widthProperty().divide(2));
@@ -264,8 +256,8 @@ public class MainWindow extends Application {
 	private void updateMessagesList() {
 		if (selectedAccount != null) {
 			inboxLabel.setText("Inbox - " + selectedAccount.getEmail());
-			totalMessagesLabel.setText(handler.getEmailList(selectedAccount).size() + " messages found");
-			messagesList.getItems().addAll(handler.getMailObjectList(selectedAccount));
+			totalMessagesLabel.setText(handler.getMailList(selectedAccount).size() + " messages found | "+handler.getUnseenMessageCount(selectedAccount)+" unseen.");
+			messagesList.getItems().addAll(handler.getMailList(selectedAccount));
 
 		} else {
 			inboxLabel.setText("Inbox - <select an account first>");

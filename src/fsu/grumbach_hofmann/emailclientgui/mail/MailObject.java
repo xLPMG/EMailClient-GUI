@@ -15,16 +15,16 @@ import fsu.grumbach_hofmann.emailclientgui.util.MailUtils;
 
 public class MailObject implements Comparable<MailObject> {
 
-	private String subject, read, from, to, content, preview, html;
+	private String subject, from, to, content, preview, html;
 	private LocalDate dateSent;
-	public Flag getFlags;
 	private Message message;
+	private boolean seen;
 
-	public MailObject(Message message, MailUtils mailUtils) {
+	public MailObject(Message message, MailUtils mailUtils, boolean seen) {
 		try {
 			this.message = message;
+			this.seen = seen;
 			subject = message.getSubject();
-			read = "no";
 			Address[] froms = message.getFrom();
 			Address[] tos = message.getAllRecipients();
 			from = froms == null ? null : ((InternetAddress) froms[0]).getAddress();
@@ -62,14 +62,6 @@ public class MailObject implements Comparable<MailObject> {
 
 	public void setSubject(String subject) {
 		this.subject = subject;
-	}
-
-	public String getRead() {
-		return read;
-	}
-
-	public void setRead(String read) {
-		this.read = read;
 	}
 
 	public String getFrom() {
@@ -123,9 +115,12 @@ public class MailObject implements Comparable<MailObject> {
 	public Message getMessage() {
 		return message;
 	}
-
-	public void setFlag(Flag seen, boolean b) {
-		// TODO Auto-generated method stub
-		
+	
+	public boolean isSeen() {
+		return seen;
+	}
+	
+	public void setSeen(boolean seen) {
+		this.seen=seen;
 	}
 }

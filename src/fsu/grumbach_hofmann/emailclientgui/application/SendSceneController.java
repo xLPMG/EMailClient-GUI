@@ -47,6 +47,7 @@ public class SendSceneController {
     
     @FXML
     void sendMail(ActionEvent event) {
+    	//TODO: input check
     	if (selectedAccount != null) {
 			sender.sendMail(selectedAccount, sendSubjectTextField.getText(), sendCopyTextField.getText(),
 					sendToTextField.getText(), sendFromTextField.getText(), sendMessageTextArea.getText());

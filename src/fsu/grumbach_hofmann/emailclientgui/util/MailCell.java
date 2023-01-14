@@ -85,8 +85,6 @@ public class MailCell extends ListCell<MailObject> {
      
         	setGraphic(cellMainPane);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            
-           
         }
     }
 }

@@ -38,12 +38,10 @@ public class MailReceiver {
 			Store store = emailSession.getStore("pop3s");
 			store.connect(serverAddress, username, password);
 
-//			Folder[] folders = store.getDefaultFolder().list("*");
-//		    for (Folder folder : folders) {
-//		        if ((folder.getType() & Folder.HOLDS_MESSAGES) != 0) {
-//		            System.out.println(folder.getFullName() + ": " + folder.getMessageCount());
-//		        }
-//		    }
+			Folder[] folders = store.getDefaultFolder().list("*");
+		    for (Folder folder : folders) {
+		            System.out.println(folder.getFullName() + ": " + folder.getMessageCount());
+		    }
 			
 			Folder inboxFolder = store.getFolder("INBOX");
 			if (inboxFolder == null) {

@@ -49,7 +49,7 @@
                      <menus>
                         <Menu fx:id="accountsMenuItem" mnemonicParsing="false" text="Settings">
                           <items>
-                            <MenuItem fx:id="addAccountItem" mnemonicParsing="false" text="Add account" />
+                            <MenuItem fx:id="addAccountItem" mnemonicParsing="false" onAction="#addAccount" text="Add account" />
                               <MenuItem fx:id="removeAccountItem" mnemonicParsing="false" text="Remove account" />
                           </items>
                         </Menu>
@@ -68,7 +68,7 @@
                   </Pane>
                </bottom>
                <center>
-                  <SplitPane dividerPositions="0.5" BorderPane.alignment="CENTER">
+                  <SplitPane fx:id="splitPane" dividerPositions="0.5" BorderPane.alignment="CENTER">
                     <items>
                         <VBox styleClass="tertiarySystemBackground">
                            <children>
@@ -100,7 +100,7 @@
                                  <children>
                                     <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0">
                                        <children>
-                                          <Button fx:id="btnReceiveMails" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="imageButton">
+                                          <Button fx:id="btnReceiveMails" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#receiveMails" prefHeight="40.0" prefWidth="40.0" styleClass="imageButton">
                                              <padding>
                                                 <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                                              </padding>
@@ -108,7 +108,7 @@
                                                 <Insets left="5.0" />
                                              </HBox.margin>
                                           </Button>
-                                          <Button fx:id="btnWriteMail" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="imageButton">
+                                          <Button fx:id="btnWriteMail" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#writeMail" prefHeight="40.0" prefWidth="40.0" styleClass="imageButton">
                                              <padding>
                                                 <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                                              </padding>

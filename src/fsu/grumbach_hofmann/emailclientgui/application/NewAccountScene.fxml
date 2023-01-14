@@ -2,14 +2,14 @@
 
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="systemBackground" stylesheets="@../style/DarkTheme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="systemBackground" stylesheets="@../style/DarkTheme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fsu.grumbach_hofmann.emailclientgui.application.NewAccountSceneController">
    <children>
       <Label styleClass="primarylabel" text="Add a new account" textFill="WHITE">
          <font>
@@ -21,16 +21,28 @@
       </Label>
       <HBox VBox.vgrow="NEVER">
          <children>
-            <Label prefWidth="160.0" styleClass="secondaryLabel" text="Name">
+            <Label prefWidth="160.0" styleClass="secondaryLabel" text="Name &amp; Surname">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextField HBox.hgrow="ALWAYS">
+            <TextField fx:id="newAccNameTextField" HBox.hgrow="ALWAYS">
                <styleClass>
                   <String fx:value="secondarySystemBackground" />
                   <String fx:value="primarylabel" />
                </styleClass>
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </TextField>
+            <TextField fx:id="newAccSurnameTextField" HBox.hgrow="ALWAYS">
+               <styleClass>
+                  <String fx:value="secondarySystemBackground" />
+                  <String fx:value="primarylabel" />
+               </styleClass>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
             </TextField>
          </children>
          <VBox.margin>
@@ -44,7 +56,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextField HBox.hgrow="ALWAYS">
+            <TextField fx:id="newAccEmailTextField" HBox.hgrow="ALWAYS">
                <styleClass>
                   <String fx:value="secondarySystemBackground" />
                   <String fx:value="primarylabel" />
@@ -62,7 +74,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextField HBox.hgrow="ALWAYS">
+            <TextField fx:id="newAccUsernameTextField" HBox.hgrow="ALWAYS">
                <styleClass>
                   <String fx:value="secondarySystemBackground" />
                   <String fx:value="primarylabel" />
@@ -80,7 +92,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextField HBox.hgrow="ALWAYS">
+            <TextField fx:id="newAccPasswordTextField" HBox.hgrow="ALWAYS">
                <styleClass>
                   <String fx:value="secondarySystemBackground" />
                   <String fx:value="primarylabel" />
@@ -98,7 +110,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextField HBox.hgrow="ALWAYS">
+            <TextField fx:id="newAccInboxAddressTextField" HBox.hgrow="ALWAYS">
                <styleClass>
                   <String fx:value="secondarySystemBackground" />
                   <String fx:value="primarylabel" />
@@ -112,7 +124,7 @@
                   <Insets left="5.0" right="5.0" />
                </HBox.margin>
             </Label>
-            <TextField maxWidth="-Infinity" prefWidth="60.0" HBox.hgrow="NEVER">
+            <TextField fx:id="newAccInboxPortTextField" maxWidth="-Infinity" prefWidth="60.0" HBox.hgrow="NEVER">
                <styleClass>
                   <String fx:value="secondarySystemBackground" />
                   <String fx:value="primarylabel" />
@@ -130,7 +142,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextField HBox.hgrow="ALWAYS">
+            <TextField fx:id="newAccOutboxAddressTextField" HBox.hgrow="ALWAYS">
                <styleClass>
                   <String fx:value="secondarySystemBackground" />
                   <String fx:value="primarylabel" />
@@ -144,7 +156,7 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <TextField maxWidth="-Infinity" prefWidth="60.0" HBox.hgrow="NEVER">
+            <TextField fx:id="newAccOutboxPortTextField" maxWidth="-Infinity" prefWidth="60.0" HBox.hgrow="NEVER">
                <styleClass>
                   <String fx:value="secondarySystemBackground" />
                   <String fx:value="primarylabel" />
@@ -157,22 +169,16 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Label styleClass="highlightLabel" text="Add">
+            <Button fx:id="newAccAddButton" mnemonicParsing="false" onAction="#addAccount" style="-fx-background-color: transparent;" styleClass="highlightLabel" text="Add">
                <font>
                   <Font size="20.0" />
                </font>
-               <HBox.margin>
-                  <Insets left="15.0" right="15.0" />
-               </HBox.margin>
-            </Label>
-            <Label styleClass="highlightLabel" text="Cancel">
+            </Button>
+            <Button fx:id="newAccCancelButton" mnemonicParsing="false" onAction="#cancelAction" style="-fx-background-color: transparent;" styleClass="highlightLabel" text="Cancel">
                <font>
                   <Font size="20.0" />
                </font>
-               <HBox.margin>
-                  <Insets left="15.0" right="15.0" />
-               </HBox.margin>
-            </Label>
+            </Button>
          </children>
       </HBox>
    </children>

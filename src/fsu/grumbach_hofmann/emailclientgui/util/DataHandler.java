@@ -1,7 +1,6 @@
 package fsu.grumbach_hofmann.emailclientgui.util;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -274,7 +273,6 @@ public class DataHandler {
 		}
 		Collections.sort(mailList);
 		mailListMap.put(acc, mailList);
-
 	}
 
 	private boolean isMessageSeen(Message message, Account account) {
@@ -283,7 +281,6 @@ public class DataHandler {
 			return seenHeader[0].equalsIgnoreCase("true") ? true : false; 
 		} catch (Exception e) {
 			try {
-				System.out.println("no header found");
 				message.addHeader("Seen", "false");
 				saveMail(message, account.getUsername(), true);
 				return false;
@@ -319,6 +316,10 @@ public class DataHandler {
 
 	public ArrayList<MailObject> getMailList(Account account) {
 		return mailListMap.get(account);
+	}
+	
+	public int getMailsCount(Account account) {
+		return mailListMap.get(account).size();
 	}
 
 	public int getUnseenMessageCount(Account account) {

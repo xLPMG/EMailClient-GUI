@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 
 import javax.mail.Address;
-import javax.mail.Flags.Flag;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;

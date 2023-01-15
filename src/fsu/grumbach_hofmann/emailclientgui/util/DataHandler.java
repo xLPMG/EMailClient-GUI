@@ -20,6 +20,7 @@ import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
+import fsu.grumbach_hofmann.emailclientgui.mail.MailUtils;
 
 public class DataHandler {
 

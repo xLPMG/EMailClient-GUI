@@ -1,4 +1,4 @@
-package fsu.grumbach_hofmann.emailclientgui.util;
+package fsu.grumbach_hofmann.emailclientgui.mail;
 
 import java.io.IOException;
 

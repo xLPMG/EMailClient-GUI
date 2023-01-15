@@ -126,7 +126,7 @@ public class MainSceneController {
 	void addAccount(ActionEvent event) {
 		try {
 			FXMLLoader newAccountLoader = new FXMLLoader(
-					getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/NewAccountScene.fxml"));
+					getClass().getResource("/view/NewAccountScene.fxml"));
 			Parent newAccountRoot = newAccountLoader.load();
 			newAccountSceneController = newAccountLoader.getController();
 			newAccountSceneController.initController(handler);
@@ -176,7 +176,7 @@ public class MainSceneController {
 			return;
 		try {
 			FXMLLoader sendLoader = new FXMLLoader(
-					getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/SendScene.fxml"));
+					getClass().getResource("/view/SendScene.fxml"));
 			Parent sendRoot = sendLoader.load();
 			sendSceneController = sendLoader.getController();
 			sendSceneController.initController(selectedAccount, sender);

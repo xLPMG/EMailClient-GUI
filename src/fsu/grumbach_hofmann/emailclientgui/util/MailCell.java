@@ -41,7 +41,7 @@ public class MailCell extends ListCell<MailObject> {
 
     private void loadFXML() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/util/MailCell.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MailCell.fxml"));
             loader.setController(this);
             loader.load();
         }

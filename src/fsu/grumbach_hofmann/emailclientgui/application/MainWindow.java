@@ -45,16 +45,16 @@ public class MainWindow extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/MainScene.fxml"));
+			FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("/view/MainScene.fxml"));
 			Parent root = rootLoader.load();
 			mainSceneController = rootLoader.getController();
 			mainSceneController.initController(handler, receiver, sender);
 			
 			scene = new Scene(root, 1000, 700);
 			scene.getStylesheets().add(getClass()
-					.getResource("/fsu/grumbach_hofmann/emailclientgui/style/MainScene.css").toExternalForm());
+					.getResource("/style/MainScene.css").toExternalForm());
 			scene.getStylesheets().add(getClass()
-					.getResource("/fsu/grumbach_hofmann/emailclientgui/style/DarkTheme.css").toExternalForm());
+					.getResource("/style/DarkTheme.css").toExternalForm());
 			primaryStage.setTitle("Java Mail Client");
 			primaryStage.setScene(scene);
 			primaryStage.show();

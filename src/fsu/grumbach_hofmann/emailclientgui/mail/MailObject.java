@@ -10,8 +10,6 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 
-import fsu.grumbach_hofmann.emailclientgui.util.MailUtils;
-
 public class MailObject implements Comparable<MailObject> {
 
 	private String subject, from, to, content, preview, html;

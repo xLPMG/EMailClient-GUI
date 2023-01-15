@@ -193,6 +193,7 @@ public class MainSceneController {
 				if (selectedAccount == null)
 					return;
 				handler.updateSeen(newSelection, selectedAccount, true);
+				updateUnseenMessageCount();
 
 				messageDisplayPane.setVisible(true);
 				senderLabel.setText(newSelection.getFrom());
@@ -240,12 +241,13 @@ public class MainSceneController {
 			accountsDropdown.getItems().add(acc.getEmail());
 		}
 	}
+	
+	
 
 	public void updateMessagesList() {
 		if (selectedAccount != null) {
 			inboxLabel.setText("Inbox - " + selectedAccount.getEmail());
-			totalMessagesLabel.setText(handler.getMailsCount(selectedAccount) + " messages found | "
-					+ handler.getUnseenMessageCount(selectedAccount) + " unseen.");
+			updateUnseenMessageCount();
 			messagesList.getItems().addAll(handler.getMailList(selectedAccount));
 		} else {
 			inboxLabel.setText("Inbox - <select an account first>");
@@ -254,5 +256,10 @@ public class MainSceneController {
 		}
 
 	};
+	
+	private void updateUnseenMessageCount() {
+		totalMessagesLabel.setText(handler.getMailsCount(selectedAccount) + " messages found | "
+				+ handler.getUnseenMessageCount(selectedAccount) + " unseen.");
+	}
 
 }

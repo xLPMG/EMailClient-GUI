@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,9 +28,9 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class MainSceneController {
 
@@ -77,9 +78,9 @@ public class MainSceneController {
 
 	@FXML
 	private Label senderLabel;
-	
-    @FXML
-    private SplitPane splitPane;
+
+	@FXML
+	private SplitPane splitPane;
 
 	@FXML
 	private Label subjectLabel;
@@ -102,11 +103,11 @@ public class MainSceneController {
 		this.receiver = receiver;
 		this.sender = sender;
 	}
-	
+
 	public void postInitController() {
 		initAccountList();
 		initMessagesList();
-		
+
 		Image btnReceiveMailsImg = new Image("receiveIcon.png");
 		ImageView btnReceiveMailsImgView = new ImageView(btnReceiveMailsImg);
 		btnReceiveMailsImgView.setFitHeight(btnReceiveMails.getHeight());
@@ -135,21 +136,25 @@ public class MainSceneController {
 			stage.setTitle("Add new account");
 			stage.setScene(newAccountScene);
 			stage.show();
+			// update accounts menu after closing window
+			stage.setOnHidden(e -> {
+				System.out.println("stage hidden");
+				updateAccountsList();
+			});
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-    @FXML
-    void removeAccount(ActionEvent event) {
-    	handler.removeAccount(selectedAccount);
-    	updateAccountsList();
-    	
-    	selectedAccount=null;
-    	updateMessagesList();
-    	messageDisplayPane.setVisible(false);
-    }
+
+	@FXML
+	void removeAccount(ActionEvent event) {
+		handler.removeAccount(selectedAccount);
+		updateAccountsList();
+
+		selectedAccount = null;
+		updateMessagesList();
+		messageDisplayPane.setVisible(false);
+	}
 
 	@FXML
 	void receiveMails(ActionEvent event) {
@@ -169,21 +174,21 @@ public class MainSceneController {
 	void writeMail(ActionEvent event) {
 		if (selectedAccount == null)
 			return;
-			try {
-				FXMLLoader sendLoader = new FXMLLoader(
-						getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/SendScene.fxml"));
-				Parent sendRoot = sendLoader.load();
-				sendSceneController = sendLoader.getController();
-				sendSceneController.initController(selectedAccount, sender);
-				Scene sendScene = new Scene(sendRoot);
+		try {
+			FXMLLoader sendLoader = new FXMLLoader(
+					getClass().getResource("/fsu/grumbach_hofmann/emailclientgui/application/SendScene.fxml"));
+			Parent sendRoot = sendLoader.load();
+			sendSceneController = sendLoader.getController();
+			sendSceneController.initController(selectedAccount, sender);
+			Scene sendScene = new Scene(sendRoot);
 
-				Stage stage = new Stage();
-				stage.setTitle("Write mail");
-				stage.setScene(sendScene);
-				stage.show();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			Stage stage = new Stage();
+			stage.setTitle("Write mail");
+			stage.setScene(sendScene);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void initMessagesList() {
@@ -214,35 +219,39 @@ public class MainSceneController {
 		accountsDropdown.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observableValue, Number indexOld, Number indexNew) {
-				String accMail = (String) accountsDropdown.getItems().get((Integer) indexNew);
-				for (Account acc : handler.getAccountData()) {
-					if (acc.getEmail().equals(accMail)) {
-						selectedAccount = acc;
-						handler.loadMails(acc);
-						updateMessagesList();
-						// TODO: dont receive all new mails on account switch?
-						inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
-						new Thread(() -> {
-							receiver.receiveMails(selectedAccount);
-							Platform.runLater(() -> {
-								updateMessagesList();
-							});
-						}).start();
+				if ((Integer) indexNew==-1 || accountsDropdown.getItems().get((Integer) indexNew) == null) {
+						return;
+				} else {
+					String accMail = (String) accountsDropdown.getItems().get((Integer) indexNew);
+					for (Account acc : handler.getAccountData()) {
+						if (acc.getEmail().equals(accMail)) {
+							selectedAccount = acc;
+							handler.loadMails(acc);
+							updateMessagesList();
+							// TODO: dont receive all new mails on account switch?
+							inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
+							new Thread(() -> {
+								receiver.receiveMails(selectedAccount);
+								Platform.runLater(() -> {
+									updateMessagesList();
+								});
+							}).start();
+						}
 					}
 				}
 			}
 		});
 	}
-	
+
 	private void updateAccountsList() {
-		accountsDropdown.valueProperty().set(null);
 		accountsDropdown.getItems().clear();
 		for (Account acc : handler.getAccountData()) {
 			accountsDropdown.getItems().add(acc.getEmail());
+			if(acc==selectedAccount) {
+				accountsDropdown.setValue(selectedAccount.getEmail());
+			}
 		}
 	}
-	
-	
 
 	public void updateMessagesList() {
 		if (selectedAccount != null) {
@@ -256,7 +265,7 @@ public class MainSceneController {
 		}
 
 	};
-	
+
 	private void updateUnseenMessageCount() {
 		totalMessagesLabel.setText(handler.getMailsCount(selectedAccount) + " messages found | "
 				+ handler.getUnseenMessageCount(selectedAccount) + " unseen.");

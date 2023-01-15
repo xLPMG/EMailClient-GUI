@@ -50,7 +50,7 @@
                         <Menu fx:id="accountsMenuItem" mnemonicParsing="false" text="Settings">
                           <items>
                             <MenuItem fx:id="addAccountItem" mnemonicParsing="false" onAction="#addAccount" text="Add account" />
-                              <MenuItem fx:id="removeAccountItem" mnemonicParsing="false" text="Remove account" />
+                              <MenuItem fx:id="removeAccountItem" mnemonicParsing="false" onAction="#removeAccount" text="Remove account" />
                           </items>
                         </Menu>
                      </menus>

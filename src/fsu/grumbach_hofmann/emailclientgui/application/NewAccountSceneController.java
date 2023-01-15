@@ -59,7 +59,9 @@ public class NewAccountSceneController {
 		int outPort = Integer.parseInt(newAccOutboxPortTextField.getText());
 		handler.addAccount(newAccUsernameTextField.getText(), newAccEmailTextField.getText(),
 				newAccPasswordTextField.getText(), newAccNameTextField.getText(), newAccSurnameTextField.getText(),
-				newAccInboxPortTextField.getText(), inPort, newAccOutboxPortTextField.getText(), outPort);
+				newAccInboxAddressTextField.getText(), inPort, newAccOutboxAddressTextField.getText(), outPort);
+		Stage stage = (Stage) newAccAddButton.getScene().getWindow();
+	    stage.close();
 	}
 
 	@FXML

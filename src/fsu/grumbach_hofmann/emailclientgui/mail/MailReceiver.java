@@ -53,7 +53,7 @@ public class MailReceiver {
 			System.out.println("DEBUG: Loading messages");
 			int i = messages.length-1;
 			while(i>0) {
-//				System.out.println((messages.length-i)+"/"+messages.length);
+				System.out.println((messages.length-i)+"/"+messages.length);
 				dH.saveMail(messages[i], username, false);
 				i--;
 			}

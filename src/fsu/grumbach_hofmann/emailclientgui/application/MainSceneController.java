@@ -140,6 +140,16 @@ public class MainSceneController {
 			e.printStackTrace();
 		}
 	}
+	
+    @FXML
+    void removeAccount(ActionEvent event) {
+    	handler.removeAccount(selectedAccount);
+    	updateAccountsList();
+    	
+    	selectedAccount=null;
+    	updateMessagesList();
+    	messageDisplayPane.setVisible(false);
+    }
 
 	@FXML
 	void receiveMails(ActionEvent event) {
@@ -222,6 +232,14 @@ public class MainSceneController {
 			}
 		});
 	}
+	
+	private void updateAccountsList() {
+		accountsDropdown.valueProperty().set(null);
+		accountsDropdown.getItems().clear();
+		for (Account acc : handler.getAccountData()) {
+			accountsDropdown.getItems().add(acc.getEmail());
+		}
+	}
 
 	public void updateMessagesList() {
 		if (selectedAccount != null) {
@@ -229,10 +247,10 @@ public class MainSceneController {
 			totalMessagesLabel.setText(handler.getMailsCount(selectedAccount) + " messages found | "
 					+ handler.getUnseenMessageCount(selectedAccount) + " unseen.");
 			messagesList.getItems().addAll(handler.getMailList(selectedAccount));
-
 		} else {
 			inboxLabel.setText("Inbox - <select an account first>");
 			totalMessagesLabel.setText("No messages found");
+			messagesList.getItems().clear();
 		}
 
 	};

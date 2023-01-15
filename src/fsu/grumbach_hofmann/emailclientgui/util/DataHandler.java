@@ -197,10 +197,13 @@ public class DataHandler {
 	public void removeAccount(String username) {
 		for (Account acc : accountList) {
 			if (acc.getUsername().equals(username)) {
-				deleteAccountData(acc);
-				accountList.remove(acc);
+				removeAccount(acc);
 			}
 		}
+	}
+
+	public void removeAccount(Account account) {
+		deleteAccountData(account);
 		saveAccountData();
 	}
 
@@ -214,9 +217,11 @@ public class DataHandler {
 	}
 
 	private void deleteAccountData(Account account) {
-		// TODO
+		deleteMails(account);
+		mailListMap.remove(account);
+		accountList.remove(account);
 	}
-
+	
 	public void saveMail(Message message, String username, boolean force) {
 		try {
 			String fileNameRaw = message.getSentDate() + "-" + message.getFrom()[0] + ".eml";
@@ -274,11 +279,25 @@ public class DataHandler {
 		Collections.sort(mailList);
 		mailListMap.put(acc, mailList);
 	}
+	
+	private void deleteMails(Account account) {
+		File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + account.getUsername());
+		if (!userSubdirectory.exists()) {
+			return;
+		}
+
+		for (File mailFile : userSubdirectory.listFiles()) {
+			if (!mailFile.isDirectory()) {
+				mailFile.delete();
+			}
+		}
+		userSubdirectory.delete();
+	}
 
 	private boolean isMessageSeen(Message message, Account account) {
 		try {
 			String[] seenHeader = message.getHeader("Seen");
-			return seenHeader[0].equalsIgnoreCase("true") ? true : false; 
+			return seenHeader[0].equalsIgnoreCase("true") ? true : false;
 		} catch (Exception e) {
 			try {
 				message.addHeader("Seen", "false");
@@ -301,8 +320,8 @@ public class DataHandler {
 			} catch (MessagingException e) {
 				e.printStackTrace();
 			}
-		}	
-		if(seen) {
+		}
+		if (seen) {
 			unseenMessageCount.put(account, unseenMessageCount.getOrDefault(account, 1) - 1);
 		}
 	}
@@ -317,7 +336,7 @@ public class DataHandler {
 	public ArrayList<MailObject> getMailList(Account account) {
 		return mailListMap.get(account);
 	}
-	
+
 	public int getMailsCount(Account account) {
 		return mailListMap.get(account).size();
 	}

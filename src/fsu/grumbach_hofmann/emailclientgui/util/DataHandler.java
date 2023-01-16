@@ -225,7 +225,10 @@ public class DataHandler {
 	
 	public void saveMail(Message message, String username, boolean force) {
 		try {
-			String fileNameRaw = message.getSentDate() + "-" + message.getFrom()[0] + ".eml";
+			String fileNameRaw="NoSender";
+			if(message.getFrom()!=null) {
+				fileNameRaw = message.getSentDate() + "-" + message.getFrom()[0] + ".eml";
+			}
 			String fileName = fileNameRaw.replace(" ", "_").replace("/", "|");
 			File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + username);
 			if (!userSubdirectory.exists()) {

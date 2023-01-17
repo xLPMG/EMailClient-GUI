@@ -53,6 +53,20 @@ public class SendSceneController {
     @FXML
     void sendMail(ActionEvent event) {
     	//TODO: input check
+    	int valueFrom = checkSendFrom();
+    	int valueTo = checkSendTo();
+    	if(valueFrom==0) {
+    		sendFromTextField.setPromptText("missing input.");
+    		return;
+    	}
+    	if(valueTo==0) {
+    		sendToTextField.setPromptText("missing input.");
+    		return;
+    	}
+    	if(valueTo==1) {
+    		sendToTextField.setPromptText("set back to account address!"); //oder man setzt send from to noteditable
+    	}
+    	
     	if (selectedAccount != null) {
 			sender.sendMail(selectedAccount, sendSubjectTextField.getText(), sendCopyTextField.getText(),
 					sendToTextField.getText(), sendFromTextField.getText(), sendMessageTextArea.getText());
@@ -60,5 +74,26 @@ public class SendSceneController {
     	Stage stage = (Stage) btnSendMail.getScene().getWindow();
 	    stage.close();
     }
+
+ int checkSendTo() {
+		// TODO Auto-generated method stub
+		if( sendToTextField.getText() == ""){
+			return 0;
+		}else {
+			return 1;
+		}
+	}
+
+
+int checkSendFrom() {
+	// TODO Auto-generated method stub
+	if( sendFromTextField.getText() == ""){
+		return 0;
+	}else if(sendFromTextField.getText() != selectedAccount.getEmail()){
+		return 1;
+	}else {
+		return 2; 
+	}
+}
 }
 

@@ -50,7 +50,9 @@ public class MailSender {
 			
 			String[] recipientsCopy = copy.split(",");
 			for (String recipient : recipientsCopy) {
+				if(!recipient.equals("")) {
 				message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+				}
 			}
 
 			message.setFrom(new InternetAddress(from));

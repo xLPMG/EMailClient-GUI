@@ -9,6 +9,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 public class SendSceneController {
 
@@ -34,7 +35,11 @@ public class SendSceneController {
     private MailSender sender;
     
     public void initController(Account selectedAccount, MailSender sender) {
+    	this.sender=sender;
     	this.selectedAccount = selectedAccount;
+    }
+    
+    public void postInit() {
 		sendFromTextField.setText(selectedAccount.getEmail());
 		//declare button image after stage is shown to determine actual button size
 		Image btnSendNewMailImg = new Image("sendIcon.png");
@@ -52,6 +57,8 @@ public class SendSceneController {
 			sender.sendMail(selectedAccount, sendSubjectTextField.getText(), sendCopyTextField.getText(),
 					sendToTextField.getText(), sendFromTextField.getText(), sendMessageTextArea.getText());
 		}
+    	Stage stage = (Stage) btnSendMail.getScene().getWindow();
+	    stage.close();
     }
 }
 

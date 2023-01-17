@@ -181,11 +181,11 @@ public class MainSceneController {
 			sendSceneController = sendLoader.getController();
 			sendSceneController.initController(selectedAccount, sender);
 			Scene sendScene = new Scene(sendRoot);
-
 			Stage stage = new Stage();
 			stage.setTitle("Write mail");
 			stage.setScene(sendScene);
 			stage.show();
+			sendSceneController.postInit();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -92,6 +92,7 @@
  .text-field {
      -fx-font-size: 12.0pt;
      -fx-font-family: "Segoe UI Semibold";
+     -fx-prompt-text-fill: red;
 }
  .imageButton{
      -fx-border-color: transparent;

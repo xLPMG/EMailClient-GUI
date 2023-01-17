@@ -269,7 +269,7 @@ public class DataHandler {
 				try {
 					InputStream source = new FileInputStream(mailFile);
 					MimeMessage m = new MimeMessage(emailSession, source);
-					boolean isSeen = isMessageSeen(m, acc);
+					boolean isSeen = isMessageSeen(m, acc);;
 					MailObject newMO = new MailObject(m, mU, isSeen);
 					mailList.add(newMO);
 					if (!isSeen) {

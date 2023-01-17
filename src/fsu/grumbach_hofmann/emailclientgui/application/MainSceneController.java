@@ -138,7 +138,6 @@ public class MainSceneController {
 			stage.show();
 			// update accounts menu after closing window
 			stage.setOnHidden(e -> {
-				System.out.println("stage hidden");
 				updateAccountsList();
 			});
 		} catch (IOException e) {
@@ -229,13 +228,13 @@ public class MainSceneController {
 							handler.loadMails(acc);
 							updateMessagesList();
 							// TODO: dont receive all new mails on account switch?
-							inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
-							new Thread(() -> {
-								receiver.receiveMails(selectedAccount);
-								Platform.runLater(() -> {
-									updateMessagesList();
-								});
-							}).start();
+//							inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
+//							new Thread(() -> {
+//								receiver.receiveMails(selectedAccount);
+//								Platform.runLater(() -> {
+//									updateMessagesList();
+//								});
+//							}).start();
 						}
 					}
 				}
@@ -257,6 +256,7 @@ public class MainSceneController {
 		if (selectedAccount != null) {
 			inboxLabel.setText("Inbox - " + selectedAccount.getEmail());
 			updateUnseenMessageCount();
+			messagesList.getItems().clear();
 			messagesList.getItems().addAll(handler.getMailList(selectedAccount));
 		} else {
 			inboxLabel.setText("Inbox - <select an account first>");

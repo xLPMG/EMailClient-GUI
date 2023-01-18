@@ -129,7 +129,7 @@ public class MainSceneController {
 					getClass().getResource("/view/NewAccountScene.fxml"));
 			Parent newAccountRoot = newAccountLoader.load();
 			newAccountSceneController = newAccountLoader.getController();
-			newAccountSceneController.initController(handler);
+			newAccountSceneController.initController(handler, sender);
 			Scene newAccountScene = new Scene(newAccountRoot);
 
 			Stage stage = new Stage();

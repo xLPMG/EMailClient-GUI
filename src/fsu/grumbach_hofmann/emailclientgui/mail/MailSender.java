@@ -1,6 +1,5 @@
 package fsu.grumbach_hofmann.emailclientgui.mail;
 
-import java.net.UnknownHostException;
 import java.util.Properties;
 
 import javax.mail.AuthenticationFailedException;
@@ -24,9 +23,7 @@ public class MailSender {
 
 	public void sendMail(Account acc, String subject, String copy, String to, String from, String messageContent) {
 		serverAddress = acc.getOutbox();
-		// TODO
-		// int serverPort = acc.getOutboxPort();
-		int serverPort = 587;
+		serverPort = acc.getOutboxPort();
 		username = acc.getUsername();
 		password = acc.getPassword();
 

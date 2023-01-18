@@ -13,87 +13,67 @@ import javafx.stage.Stage;
 
 public class SendSceneController {
 
-    @FXML
-    private Button btnSendMail;
+	@FXML
+	private Button btnSendMail;
 
-    @FXML
-    private TextField sendCopyTextField;
+	@FXML
+	private TextField sendCopyTextField;
 
-    @FXML
-    private TextField sendFromTextField;
+	@FXML
+	private TextField sendFromTextField;
 
-    @FXML
-    private TextArea sendMessageTextArea;
+	@FXML
+	private TextArea sendMessageTextArea;
 
-    @FXML
-    private TextField sendSubjectTextField;
+	@FXML
+	private TextField sendSubjectTextField;
 
-    @FXML
-    private TextField sendToTextField;
+	@FXML
+	private TextField sendToTextField;
 
-    private Account selectedAccount;
-    private MailSender sender;
-    
-    public void initController(Account selectedAccount, MailSender sender) {
-    	this.sender=sender;
-    	this.selectedAccount = selectedAccount;
-    }
-    
-    public void postInit() {
+	private Account selectedAccount;
+	private MailSender sender;
+
+	public void initController(Account selectedAccount, MailSender sender) {
+		this.sender = sender;
+		this.selectedAccount = selectedAccount;
+	}
+
+	public void postInit() {
 		sendFromTextField.setText(selectedAccount.getEmail());
-		//declare button image after stage is shown to determine actual button size
+		// declare button image after stage is shown to determine actual button size
 		Image btnSendNewMailImg = new Image("sendIcon.png");
 		ImageView btnSendNewMailImgView = new ImageView(btnSendNewMailImg);
 		System.out.println(btnSendMail.getHeight());
 		btnSendNewMailImgView.setFitHeight(btnSendMail.getHeight());
 		btnSendNewMailImgView.setPreserveRatio(true);
 		btnSendMail.setGraphic(btnSendNewMailImgView);
-    }
-    
-    @FXML
-    void sendMail(ActionEvent event) {
-    	//TODO: input check
-    	int valueFrom = checkSendFrom();
-    	int valueTo = checkSendTo();
-    	if(valueFrom==0) {
-    		sendFromTextField.setPromptText("missing input.");
-    		return;
-    	}
-    	if(valueTo==0) {
-    		sendToTextField.setPromptText("missing input.");
-    		return;
-    	}
-    	if(valueTo==1) {
-    		sendToTextField.setPromptText("set back to account address!"); //oder man setzt send from to noteditable
-    	}
-    	
-    	if (selectedAccount != null) {
+	}
+
+	@FXML
+	void sendMail(ActionEvent event) {
+//		boolean isFromEmpty = sendFromTextField.getText().equals("");
+		boolean isToEmpty = sendToTextField.getText().equals("");
+		boolean isFromEqualEMail = sendFromTextField.getText().equals(selectedAccount.getEmail());
+//		if (isFromEmpty) {
+//			sendFromTextField.setPromptText("missing input.");
+//			return;
+//		}
+		if (isToEmpty) {
+			sendToTextField.setPromptText("missing input.");
+			return;
+		}
+		//TODO: not really necessary as field is non editable
+		if (!isFromEqualEMail) {
+			sendFromTextField.setPromptText("Use your set e-mail address");
+			return;
+		}
+
+		if (selectedAccount != null) {
 			sender.sendMail(selectedAccount, sendSubjectTextField.getText(), sendCopyTextField.getText(),
 					sendToTextField.getText(), sendFromTextField.getText(), sendMessageTextArea.getText());
 		}
-    	Stage stage = (Stage) btnSendMail.getScene().getWindow();
-	    stage.close();
-    }
-
- int checkSendTo() {
-		// TODO Auto-generated method stub
-		if( sendToTextField.getText() == ""){
-			return 0;
-		}else {
-			return 1;
-		}
-	}
-
-
-int checkSendFrom() {
-	// TODO Auto-generated method stub
-	if( sendFromTextField.getText() == ""){
-		return 0;
-	}else if(sendFromTextField.getText() != selectedAccount.getEmail()){
-		return 1;
-	}else {
-		return 2; 
+		Stage stage = (Stage) btnSendMail.getScene().getWindow();
+		stage.close();
 	}
 }
-}
-

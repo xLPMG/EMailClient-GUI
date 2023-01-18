@@ -68,22 +68,5 @@ public class MailReceiver {
 			e.printStackTrace();
 		}
 	}
-	//TODO
-	private void writeContent(Multipart part) throws MessagingException, IOException {
-		for (int i = 0; i < part.getCount(); i++) {
-			BodyPart bodyPart = part.getBodyPart(i);
-			Object content = bodyPart.getContent();
-			if (content instanceof Multipart) {
-				writeContent((Multipart) content);
-			} else if (bodyPart.getContentType().toString().contains("text/plain")) {
-				System.out.println(content.toString());
-			} else if (bodyPart.getContentType().toString().contains("image/jpeg")) {
-				System.out.println("Warning: E-Mail contains image.");
-			} else if (bodyPart.getContentType().toString().contains("application")) {
-				System.out.println("Warning: E-Mail contains additional attachment.");
-			}
-		}
-	}
-
 }
 

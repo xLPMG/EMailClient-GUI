@@ -47,12 +47,25 @@ public class NewAccountSceneController {
 
 	private DataHandler handler;
 	private MailSender sender;
-	private ArrayList<TextField> array;
+	private ArrayList<TextField> textFieldArrayList;
 
 	public void initController(DataHandler handler, MailSender sender) {
 		this.handler = handler;
 		this.sender=sender;
-		initArrayList();
+		initTextFieldArrayList();
+	}
+	
+	private void initTextFieldArrayList() {
+		textFieldArrayList = new ArrayList();
+		textFieldArrayList.add(newAccEmailTextField);
+		textFieldArrayList.add(newAccInboxAddressTextField);
+		textFieldArrayList.add(newAccInboxPortTextField);
+		textFieldArrayList.add(newAccNameTextField);
+		textFieldArrayList.add(newAccOutboxAddressTextField);
+		textFieldArrayList.add(newAccOutboxPortTextField);
+		textFieldArrayList.add(newAccPasswordTextField);
+		textFieldArrayList.add(newAccSurnameTextField);
+		textFieldArrayList.add(newAccUsernameTextField);
 	}
 
 	@FXML
@@ -93,23 +106,9 @@ public class NewAccountSceneController {
 	    stage.close();
 	}
 	
-	void initArrayList() {
-		array = new ArrayList();
-		array.add(newAccEmailTextField);
-		array.add(newAccInboxAddressTextField);
-		array.add(newAccInboxPortTextField);
-		array.add(newAccNameTextField);
-		array.add(newAccOutboxAddressTextField);
-		array.add(newAccOutboxPortTextField);
-		array.add(newAccPasswordTextField);
-		array.add(newAccSurnameTextField);
-		array.add(newAccUsernameTextField);
-	}
-	
-	boolean isCorrectInput() {
-		
+	private boolean isCorrectInput() {
 		boolean correct=true;
-		for(TextField tf : array) {
+		for(TextField tf : textFieldArrayList) {
 			if(tf.getText().equals("")) {
 				tf.setPromptText("missing input.");
 				correct=false;

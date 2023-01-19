@@ -14,6 +14,7 @@ import fsu.grumbach_hofmann.emailclientgui.util.MailCellFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +32,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 public class MainSceneController {
@@ -67,6 +69,9 @@ public class MainSceneController {
 
 	@FXML
 	private Separator messageSperarator;
+
+	@FXML
+	private WebView messageWebView;
 
 	@FXML
 	private ListView<MailObject> messagesList;
@@ -109,7 +114,7 @@ public class MainSceneController {
 
 	public void postInitController() {
 		initAccountList();
-		initMessagesList();
+		initMessagesElements();
 
 		Image btnReceiveMailsImg = new Image("receiveIcon.png");
 		ImageView btnReceiveMailsImgView = new ImageView(btnReceiveMailsImg);
@@ -191,7 +196,8 @@ public class MainSceneController {
 		}
 	}
 
-	private void initMessagesList() {
+	private void initMessagesElements() {
+		messageDisplayPane.setVisible(false);
 		messagesList.setCellFactory(new MailCellFactory());
 		messagesList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
@@ -213,13 +219,53 @@ public class MainSceneController {
 				}
 				subjectLabel.setText(newSelection.getSubject());
 				recipientsLabel.setText(newSelection.getTo());
-				// TODO: show html if possible
-				contentLabel.setText(newSelection.getContent());
+				if (!newSelection.getContent().equals("")) {
+					messageWebView.setVisible(false);
+					messageWebView.setManaged(false);
+					contentLabel.setText(newSelection.getContent());
+				} else {
+					contentLabel.setText("");
+					messageWebView.getEngine().loadContent("<html><body>" + "<div id=\"jmcdiv\">"
+							+ newSelection.getHtml() + "</div>" + "</body></html>");
+					adjustWebViewHeight();
+					messageWebView.setMinWidth(messageDisplayPane.getWidth()-10);
+					messageWebView.setMaxWidth(messageDisplayPane.getWidth()-10);
+					messageWebView.setVisible(true);
+					messageWebView.setManaged(true);
+				}
 
 				messagesList.refresh();
 			}
 		});
-		messageDisplayPane.setVisible(false);
+		
+		//fit displaypane to scrollpane
+		messageDisplayScrollPane.widthProperty().addListener(new ChangeListener<Object>() {
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				messageDisplayPane.setMaxWidth(messageDisplayScrollPane.getWidth()-10);
+				System.out.println(messageDisplayScrollPane.getWidth());
+			}
+		});
+		
+		//webview:
+		// fit webview to container
+		messageDisplayPane.widthProperty().addListener(new ChangeListener<Object>() {
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				if (messageWebView.isVisible() && messageDisplayPane.isVisible()) {
+					messageWebView.setMinWidth(messageDisplayPane.getWidth()-10);
+					messageWebView.setMaxWidth(messageDisplayPane.getWidth()-10);
+				}
+			}
+		});
+		
+		messageWebView.getEngine().getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
+		    @Override
+		    public void changed(ObservableValue<? extends State> arg0, State oldState, State newState) {
+		        if (newState == State.SUCCEEDED) {
+		        	adjustWebViewHeight();
+		        }    
+		    }
+		});
+		messageWebView.getEngine().setUserStyleSheetLocation(getClass().getResource("/style/webview.css").toExternalForm());
 	}
 
 	private void initAccountList() {
@@ -239,7 +285,7 @@ public class MainSceneController {
 							selectedAccount = acc;
 							handler.loadMails(acc);
 							updateMessagesList();
-							// TODO: dont receive all new mails on account switch?
+							// TODO: receive all new mails on account switch?
 //							inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
 //							new Thread(() -> {
 //								receiver.receiveMails(selectedAccount);
@@ -281,6 +327,22 @@ public class MainSceneController {
 	private void updateUnseenMessageCount() {
 		totalMessagesLabel.setText(handler.getMailsCount(selectedAccount) + " messages found | "
 				+ handler.getUnseenMessageCount(selectedAccount) + " unseen.");
+	}
+
+	private void adjustWebViewHeight() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				Object result = messageWebView.getEngine()
+						.executeScript("document.getElementById('jmcdiv').offsetHeight");
+				if (result instanceof Integer) {
+					int height = (Integer) result;
+					messageWebView.setMinHeight(height + 20);
+					messageWebView.setMaxHeight(height + 20);
+				}
+
+			}
+		});
 	}
 
 }

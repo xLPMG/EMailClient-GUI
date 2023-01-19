@@ -32,6 +32,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
@@ -72,6 +73,9 @@ public class MainSceneController {
 
 	@FXML
 	private WebView messageWebView;
+	
+    @FXML
+    private HBox messagesMenuBar;
 
 	@FXML
 	private ListView<MailObject> messagesList;
@@ -197,6 +201,8 @@ public class MainSceneController {
 	}
 
 	private void initMessagesElements() {
+		messageDisplayScrollPane.setMinWidth(messagesMenuBar.getWidth()+15);
+		
 		messageDisplayPane.setVisible(false);
 		messagesList.setCellFactory(new MailCellFactory());
 		messagesList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -238,11 +244,10 @@ public class MainSceneController {
 			}
 		});
 		
-		//fit displaypane to scrollpane
 		messageDisplayScrollPane.widthProperty().addListener(new ChangeListener<Object>() {
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				messageDisplayPane.setMaxWidth(messageDisplayScrollPane.getWidth()-10);
-				System.out.println(messageDisplayScrollPane.getWidth());
+				messageDisplayPane.setMaxWidth(messageDisplayScrollPane.getWidth()-30);
+				messageDisplayPane.setMinWidth(messageDisplayScrollPane.getWidth()-30);
 			}
 		});
 		

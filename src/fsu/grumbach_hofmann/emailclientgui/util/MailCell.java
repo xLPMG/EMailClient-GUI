@@ -87,7 +87,7 @@ public class MailCell extends ListCell<MailObject> {
         	
         	cellLabelSubject.setWrapText(false);
         	cellLabelSubject.maxWidthProperty().bind(this.widthProperty().subtract(30));
-        	
+         
         	cellLabelContent.setWrapText(true);
         	cellLabelContent.maxWidthProperty().bind(this.widthProperty().subtract(30));
      

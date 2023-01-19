@@ -36,8 +36,13 @@ public class MailObject implements Comparable<MailObject> {
 			content = mailUtils.getTextFromMessage(message);
 			html = mailUtils.getHTMLFromMessage(message);
 			preview = content.substring(0, Math.min(content.length(), 100)).replace("\n", " ").replace("\r", " ");
-			dateSent = Instant.ofEpochMilli(message.getSentDate().getTime()).atZone(ZoneId.systemDefault())
-					.toLocalDate();
+			if(message.getSentDate()!=null) {
+				dateSent = Instant.ofEpochMilli(message.getSentDate().getTime()).atZone(ZoneId.systemDefault())
+						.toLocalDate();
+			}else {
+				dateSent = null;
+			}
+			
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -49,12 +54,13 @@ public class MailObject implements Comparable<MailObject> {
 	@Override
 	public int compareTo(MailObject o) {
 		if (getDateSent() == null || o.getDateSent() == null)
-			return 0;
+			//TODO: check if this is a correct implementation
+			return 1;
 		return -getDateSent().compareTo(o.getDateSent());
 	}
 
 	public String getSubject() {
-		return subject;
+		return subject==null ? "Unknown subject" : subject;
 	}
 
 	public void setSubject(String subject) {
@@ -62,7 +68,7 @@ public class MailObject implements Comparable<MailObject> {
 	}
 
 	public String getFrom() {
-		return from;
+		return from==null ? "Unknown sender" : from;
 	}
 
 	public void setFrom(String from) {
@@ -70,7 +76,7 @@ public class MailObject implements Comparable<MailObject> {
 	}
 
 	public String getTo() {
-		return to;
+		return to==null ? "Unknown recipient" : to;
 	}
 
 	public void setTo(String to) {
@@ -86,7 +92,7 @@ public class MailObject implements Comparable<MailObject> {
 	}
 
 	public String getPreview() {
-		return preview;
+		return preview==null ? "No preview available" : preview;
 	}
 
 	public void setPreview(String preview) {
@@ -94,7 +100,7 @@ public class MailObject implements Comparable<MailObject> {
 	}
 	
 	public String getContent() {
-		return content;
+		return content==null ? "No content available" : content;
 	}
 
 	public void setContent(String content) {
@@ -102,7 +108,7 @@ public class MailObject implements Comparable<MailObject> {
 	}
 	
 	public String getHtml() {
-		return html;
+		return html==null ? "No html available" : html;
 	}
 
 	public void setHtml(String html) {

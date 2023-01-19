@@ -1,6 +1,7 @@
 package fsu.grumbach_hofmann.emailclientgui.application;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailReceiver;
@@ -98,6 +99,8 @@ public class MainSceneController {
 	private NewAccountSceneController newAccountSceneController;
 	private SendSceneController sendSceneController;
 
+	private LocalDate messageDate;
+	
 	public void initController(DataHandler handler, MailReceiver receiver, MailSender sender) {
 		this.handler = handler;
 		this.receiver = receiver;
@@ -198,10 +201,16 @@ public class MainSceneController {
 					return;
 				handler.updateSeen(newSelection, selectedAccount, true);
 				updateUnseenMessageCount();
+				messagesList.refresh();
 
 				messageDisplayPane.setVisible(true);
 				senderLabel.setText(newSelection.getFrom());
-				dateLabel.setText(newSelection.getDateSent().toString());
+				messageDate = newSelection.getDateSent();
+	        	if(messageDate!=null) {
+	        		dateLabel.setText(newSelection.getDateSent().toString());
+	        	}else {
+	        		dateLabel.setText("unknown");
+	        	}
 				subjectLabel.setText(newSelection.getSubject());
 				recipientsLabel.setText(newSelection.getTo());
 				contentLabel.setText(newSelection.getContent());

@@ -201,7 +201,6 @@ public class MainSceneController {
 					return;
 				handler.updateSeen(newSelection, selectedAccount, true);
 				updateUnseenMessageCount();
-				messagesList.refresh();
 
 				messageDisplayPane.setVisible(true);
 				senderLabel.setText(newSelection.getFrom());
@@ -214,6 +213,8 @@ public class MainSceneController {
 				subjectLabel.setText(newSelection.getSubject());
 				recipientsLabel.setText(newSelection.getTo());
 				contentLabel.setText(newSelection.getContent());
+				
+				messagesList.refresh();
 			}
 		});
 		messageDisplayPane.setVisible(false);

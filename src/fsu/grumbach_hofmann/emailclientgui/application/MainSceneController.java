@@ -1,7 +1,9 @@
 package fsu.grumbach_hofmann.emailclientgui.application;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailReceiver;
@@ -97,8 +99,8 @@ public class MainSceneController {
 	private NewAccountSceneController newAccountSceneController;
 	private SendSceneController sendSceneController;
 
-	private LocalDate messageDate;
-	
+	private LocalDateTime messageDate;
+
 	public void initController(DataHandler handler, MailReceiver receiver, MailSender sender) {
 		this.handler = handler;
 		this.receiver = receiver;
@@ -126,8 +128,7 @@ public class MainSceneController {
 	@FXML
 	void addAccount(ActionEvent event) {
 		try {
-			FXMLLoader newAccountLoader = new FXMLLoader(
-					getClass().getResource("/view/NewAccountScene.fxml"));
+			FXMLLoader newAccountLoader = new FXMLLoader(getClass().getResource("/view/NewAccountScene.fxml"));
 			Parent newAccountRoot = newAccountLoader.load();
 			newAccountSceneController = newAccountLoader.getController();
 			newAccountSceneController.initController(handler, sender);
@@ -175,8 +176,7 @@ public class MainSceneController {
 		if (selectedAccount == null)
 			return;
 		try {
-			FXMLLoader sendLoader = new FXMLLoader(
-					getClass().getResource("/view/SendScene.fxml"));
+			FXMLLoader sendLoader = new FXMLLoader(getClass().getResource("/view/SendScene.fxml"));
 			Parent sendRoot = sendLoader.load();
 			sendSceneController = sendLoader.getController();
 			sendSceneController.initController(selectedAccount, sender);
@@ -199,19 +199,23 @@ public class MainSceneController {
 					return;
 				handler.updateSeen(newSelection, selectedAccount, true);
 				updateUnseenMessageCount();
-				
+
 				messageDisplayPane.setVisible(true);
 				senderLabel.setText(newSelection.getFrom());
 				messageDate = newSelection.getDateSent();
-	        	if(messageDate!=null) {
-	        		dateLabel.setText(newSelection.getDateSent().toString());
-	        	}else {
-	        		dateLabel.setText("unknown");
-	        	}
+				if (messageDate != null) {
+					String dateText = DateTimeFormatter.ofPattern("dd.MM.yy", Locale.GERMANY).format(messageDate);
+					dateText += " at ";
+					dateText += DateTimeFormatter.ofPattern("hh:mm", Locale.GERMANY).format(messageDate);
+					dateLabel.setText(dateText);
+				} else {
+					dateLabel.setText("unknown");
+				}
 				subjectLabel.setText(newSelection.getSubject());
 				recipientsLabel.setText(newSelection.getTo());
+				// TODO: show html if possible
 				contentLabel.setText(newSelection.getContent());
-				
+
 				messagesList.refresh();
 			}
 		});
@@ -226,8 +230,8 @@ public class MainSceneController {
 		accountsDropdown.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observableValue, Number indexOld, Number indexNew) {
-				if ((Integer) indexNew==-1 || accountsDropdown.getItems().get((Integer) indexNew) == null) {
-						return;
+				if ((Integer) indexNew == -1 || accountsDropdown.getItems().get((Integer) indexNew) == null) {
+					return;
 				} else {
 					String accMail = (String) accountsDropdown.getItems().get((Integer) indexNew);
 					for (Account acc : handler.getAccountData()) {
@@ -254,7 +258,7 @@ public class MainSceneController {
 		accountsDropdown.getItems().clear();
 		for (Account acc : handler.getAccountData()) {
 			accountsDropdown.getItems().add(acc.getEmail());
-			if(acc==selectedAccount) {
+			if (acc == selectedAccount) {
 				accountsDropdown.setValue(selectedAccount.getEmail());
 			}
 		}

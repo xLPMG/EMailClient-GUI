@@ -3,6 +3,7 @@ package fsu.grumbach_hofmann.emailclientgui.mail;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import javax.mail.Address;
@@ -13,7 +14,7 @@ import javax.mail.internet.InternetAddress;
 public class MailObject implements Comparable<MailObject> {
 
 	private String subject, from, to, content, preview, html;
-	private LocalDate dateSent;
+	private LocalDateTime dateSent;
 	private Message message;
 	private boolean seen;
 
@@ -38,7 +39,7 @@ public class MailObject implements Comparable<MailObject> {
 			preview = content.substring(0, Math.min(content.length(), 100)).replace("\n", " ").replace("\r", " ");
 			if(message.getSentDate()!=null) {
 				dateSent = Instant.ofEpochMilli(message.getSentDate().getTime()).atZone(ZoneId.systemDefault())
-						.toLocalDate();
+						.toLocalDateTime();
 			}else {
 				dateSent = null;
 			}
@@ -83,11 +84,11 @@ public class MailObject implements Comparable<MailObject> {
 		this.to = to;
 	}
 
-	public LocalDate getDateSent() {
+	public LocalDateTime getDateSent() {
 		return dateSent;
 	}
 
-	public void setDateSent(LocalDate dateSent) {
+	public void setDateSent(LocalDateTime dateSent) {
 		this.dateSent = dateSent;
 	}
 
@@ -100,7 +101,7 @@ public class MailObject implements Comparable<MailObject> {
 	}
 	
 	public String getContent() {
-		return content==null ? "No content available" : content;
+		return content==null ? "" : content;
 	}
 
 	public void setContent(String content) {

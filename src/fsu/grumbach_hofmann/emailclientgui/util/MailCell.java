@@ -1,7 +1,9 @@
 package fsu.grumbach_hofmann.emailclientgui.util;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 import javafx.fxml.FXML;
@@ -32,7 +34,7 @@ public class MailCell extends ListCell<MailObject> {
     @FXML
     private BorderPane cellBorderPane;
 
-    private LocalDate date;
+    private LocalDateTime date;
     
     public MailCell() {
         loadFXML();
@@ -67,7 +69,8 @@ public class MailCell extends ListCell<MailObject> {
         	cellLabelSender.setText(mailObject.getFrom());
         	date = mailObject.getDateSent();
         	if(date!=null) {
-        		cellLabelDate.setText(mailObject.getDateSent().toString());
+        		cellLabelDate.setText(DateTimeFormatter.ofPattern("dd.MM.yy",
+                        Locale.GERMANY).format(date));
         	}else {
         		cellLabelDate.setText("unknown");
         	}

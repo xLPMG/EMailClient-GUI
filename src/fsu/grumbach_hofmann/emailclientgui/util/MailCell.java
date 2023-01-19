@@ -1,10 +1,7 @@
 package fsu.grumbach_hofmann.emailclientgui.util;
 
 import java.io.IOException;
-
-import javax.mail.Flags;
-import javax.mail.Message;
-import javax.mail.MessagingException;
+import java.time.LocalDate;
 
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 import javafx.fxml.FXML;
@@ -35,6 +32,8 @@ public class MailCell extends ListCell<MailObject> {
     @FXML
     private BorderPane cellBorderPane;
 
+    private LocalDate date;
+    
     public MailCell() {
         loadFXML();
     }
@@ -66,7 +65,13 @@ public class MailCell extends ListCell<MailObject> {
 			}
         	
         	cellLabelSender.setText(mailObject.getFrom());
-        	cellLabelDate.setText(mailObject.getDateSent().toString());
+        	date = mailObject.getDateSent();
+        	if(date!=null) {
+        		cellLabelDate.setText(mailObject.getDateSent().toString());
+        	}else {
+        		cellLabelDate.setText("unknown");
+        	}
+        	
         	cellLabelSubject.setText(mailObject.getSubject());
         	cellLabelContent.setText(mailObject.getPreview());
         	

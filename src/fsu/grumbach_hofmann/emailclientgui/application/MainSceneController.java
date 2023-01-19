@@ -13,7 +13,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,7 +30,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class MainSceneController {
 
@@ -201,7 +199,7 @@ public class MainSceneController {
 					return;
 				handler.updateSeen(newSelection, selectedAccount, true);
 				updateUnseenMessageCount();
-
+				
 				messageDisplayPane.setVisible(true);
 				senderLabel.setText(newSelection.getFrom());
 				messageDate = newSelection.getDateSent();

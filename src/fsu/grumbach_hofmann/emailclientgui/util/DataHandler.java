@@ -318,8 +318,8 @@ public class DataHandler {
 		Message message = mailObject.getMessage();
 		if (isMessageSeen(message, account) != seen) {
 			try {
-				message.setHeader("Seen", seen + "");
 				mailObject.setSeen(seen);
+				message.setHeader("Seen", seen + "");
 				saveMail(message, account.getUsername(), true);
 				if (seen) {
 					unseenMessageCount.put(account, unseenMessageCount.getOrDefault(account, 1) - 1);

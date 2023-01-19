@@ -10,7 +10,6 @@ public class MailCellFactory implements Callback<ListView<MailObject>, ListCell<
 
     @Override
     public ListCell<MailObject> call(ListView<MailObject> param) {
-    	
         return new MailCell();
     }
 }

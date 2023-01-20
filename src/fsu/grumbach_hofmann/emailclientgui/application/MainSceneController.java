@@ -47,6 +47,9 @@ public class MainSceneController {
 
 	@FXML
 	private MenuItem addAccountItem;
+	
+	@FXML
+    private Button btnDeleteMail;
 
 	@FXML
 	private Button btnReceiveMails;
@@ -110,6 +113,8 @@ public class MainSceneController {
 	private Account selectedAccount;
 	private NewAccountSceneController newAccountSceneController;
 	private SendSceneController sendSceneController;
+	
+	private MailObject selectedMail;
 
 	public void initController() {
 		handler = new DataHandler();
@@ -205,6 +210,20 @@ public class MainSceneController {
 			e.printStackTrace();
 		}
 	}
+	
+	@FXML
+    void deleteMail(ActionEvent event) {
+		if(selectedMail==null)
+			return;
+		
+		try {
+			mailUtils.deleteMailFromServer(selectedMail, selectedAccount);
+			handler.deleteMail(selectedMail, selectedAccount);
+			updateMessagesList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 
 	private void initMessagesElements() {
 		messageDisplayScrollPane.setMinWidth(messagesMenuBar.getWidth() + 15);
@@ -238,7 +257,7 @@ public class MainSceneController {
 					messageWebView.setVisible(true);
 					messageWebView.setManaged(true);
 				}
-
+				selectedMail = newSelection;
 				messagesList.refresh();
 			}
 		});

@@ -85,15 +85,7 @@
                                                 <Insets left="5.0" />
                                              </HBox.margin>
                                           </Button>
-                                          <Button mnemonicParsing="false" text="Archive">
-                                             <padding>
-                                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                                             </padding>
-                                             <HBox.margin>
-                                                <Insets left="5.0" />
-                                             </HBox.margin>
-                                          </Button>
-                                          <Button mnemonicParsing="false" text="Delete">
+                                          <Button fx:id="btnDeleteMail" mnemonicParsing="false" onAction="#deleteMail" prefHeight="40.0" prefWidth="40.0" styleClass="imageButton">
                                              <padding>
                                                 <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                                              </padding>

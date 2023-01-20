@@ -297,6 +297,28 @@ public class DataHandler {
 		}
 		userSubdirectory.delete();
 	}
+	
+	public void deleteMail(MailObject mailObject, Account account) {
+		Message message = mailObject.getMessage();
+		try {
+			String fileNameRaw="NoSender";
+			if(message.getFrom()!=null) {
+				fileNameRaw = message.getSentDate() + "-" + message.getFrom()[0] + ".eml";
+			}
+			String fileName = fileNameRaw.replace(" ", "_").replace("/", "|");
+			File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + account.getUsername());
+			if (!userSubdirectory.exists()) {
+				return;
+			}
+			File mailFile = new File(userSubdirectory.getAbsolutePath() + "/" + fileName);
+			if(mailFile.exists()) {
+				mailFile.delete();
+			}
+			mailListMap.get(account).remove(mailObject);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private boolean isMessageSeen(Message message, Account account) {
 		try {

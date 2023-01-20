@@ -1,7 +1,6 @@
 package fsu.grumbach_hofmann.emailclientgui.application;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -9,6 +8,7 @@ import java.util.Locale;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailReceiver;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailSender;
+import fsu.grumbach_hofmann.emailclientgui.mail.MailUtils;
 import fsu.grumbach_hofmann.emailclientgui.util.Account;
 import fsu.grumbach_hofmann.emailclientgui.util.DataHandler;
 import fsu.grumbach_hofmann.emailclientgui.util.MailCellFactory;
@@ -105,14 +105,17 @@ public class MainSceneController {
 	private DataHandler handler;
 	private MailReceiver receiver;
 	private MailSender sender;
+	private MailUtils mailUtils;
+	
 	private Account selectedAccount;
 	private NewAccountSceneController newAccountSceneController;
 	private SendSceneController sendSceneController;
 
-	public void initController(DataHandler handler, MailReceiver receiver, MailSender sender) {
-		this.handler = handler;
-		this.receiver = receiver;
-		this.sender = sender;
+	public void initController() {
+		handler = new DataHandler();
+		receiver = new MailReceiver(handler);
+		sender = new MailSender();
+		mailUtils = new MailUtils();
 	}
 
 	public void postInitController() {
@@ -139,7 +142,7 @@ public class MainSceneController {
 			FXMLLoader newAccountLoader = new FXMLLoader(getClass().getResource("/view/NewAccountScene.fxml"));
 			Parent newAccountRoot = newAccountLoader.load();
 			newAccountSceneController = newAccountLoader.getController();
-			newAccountSceneController.initController(handler, sender);
+			newAccountSceneController.initController(handler, mailUtils);
 			Scene newAccountScene = new Scene(newAccountRoot);
 
 			Stage stage = new Stage();

@@ -66,24 +66,4 @@ public class MailSender {
 			e.printStackTrace();
 		}
 	}
-
-	public int isCorrectEmail(String outboxAddress, int outboxPort, String email, String password) {
-		try {
-			Properties props = new Properties();
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.smtp.auth", "true");
-
-			Session session = Session.getInstance(props, null);
-			Transport transport = session.getTransport("smtp");
-			transport.connect(outboxAddress, outboxPort, email, password);
-			transport.close();
-			return 1;
-		} catch (AuthenticationFailedException ignore) {
-			System.out.println("falsche email / passwort");
-			return 2;
-		} catch (MessagingException ignore) {
-			System.out.println("falscher server");
-			return 3;
-		}
-	}
 }

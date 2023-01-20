@@ -1,11 +1,20 @@
 package fsu.grumbach_hofmann.emailclientgui.mail;
 
 import java.io.IOException;
+import java.util.Properties;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
+import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.Transport;
 import javax.mail.internet.MimeMultipart;
+
+import fsu.grumbach_hofmann.emailclientgui.util.Account;
 
 public class MailUtils {
 
@@ -75,5 +84,57 @@ public class MailUtils {
 		}
 
 		return "";
+	}
+	
+	public int isCorrectEmail(String outboxAddress, int outboxPort, String email, String password) {
+		try {
+			Properties props = new Properties();
+			props.put("mail.smtp.starttls.enable", "true");
+			props.put("mail.smtp.auth", "true");
+
+			Session session = Session.getInstance(props, null);
+			Transport transport = session.getTransport("smtp");
+			transport.connect(outboxAddress, outboxPort, email, password);
+			transport.close();
+			return 1;
+		} catch (AuthenticationFailedException ignore) {
+			System.out.println("falsche email / passwort");
+			return 2;
+		} catch (MessagingException ignore) {
+			System.out.println("falscher server");
+			return 3;
+		}
+	}
+	
+	public void deleteMailFromServer(MailObject mailObject, Account account) throws Exception {
+		Message messageToDelete = mailObject.getMessage();
+		
+		String serverAddress = account.getInbox();
+		int serverPort = account.getInboxPort();
+		String username = account.getUsername();
+		String password = account.getPassword();
+		Properties properties = new Properties();
+		properties.put("mail.pop3.host", serverAddress);
+		properties.put("mail.pop3.port", serverPort);
+		
+		Session emailSession = Session.getDefaultInstance(properties);
+		Store store = emailSession.getStore("pop3s");
+		store.connect(serverAddress, username, password);
+
+		Folder[] folders = store.getDefaultFolder().list("*");
+	    for (Folder folder : folders) {
+	            System.out.println(folder.getFullName() + ": " + folder.getMessageCount());
+	    }
+		
+		Folder inboxFolder = store.getFolder("INBOX");
+		if (inboxFolder == null) {
+			throw new Exception("Invalid folder");
+		}
+		inboxFolder.open(Folder.READ_WRITE);
+
+		Message[] messages = inboxFolder.getMessages();
+		for(Message m : messages) {
+			//check if m equals messageToDelete
+		}
 	}
 }

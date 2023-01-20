@@ -33,8 +33,6 @@ public class MailCell extends ListCell<MailObject> {
     
     @FXML
     private BorderPane cellBorderPane;
-
-    private LocalDateTime date;
     
     public MailCell() {
         loadFXML();
@@ -67,13 +65,7 @@ public class MailCell extends ListCell<MailObject> {
 			}
         	
         	cellLabelSender.setText(mailObject.getFrom());
-        	date = mailObject.getDateSent();
-        	if(date!=null) {
-        		cellLabelDate.setText(DateTimeFormatter.ofPattern("dd.MM.yy",
-                        Locale.GERMANY).format(date));
-        	}else {
-        		cellLabelDate.setText("unknown");
-        	}
+        	cellLabelDate.setText(dateCalc(mailObject.getDateSent()));
         	
         	cellLabelSubject.setText(mailObject.getSubject());
         	cellLabelContent.setText(mailObject.getPreview());
@@ -95,4 +87,21 @@ public class MailCell extends ListCell<MailObject> {
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
+    
+    private String dateCalc(LocalDateTime date) {
+		if (date != null) {
+			String dateText="";
+			DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
+			if(fmt.format(date).equals(fmt.format(LocalDateTime.now()))) {
+				dateText = "Today";
+			}else if(fmt.format(date).equals(fmt.format(LocalDateTime.now().minusDays(1)))) {
+				dateText = "Yesterday";
+			}else {
+			dateText = DateTimeFormatter.ofPattern("dd.MM.yy", Locale.GERMANY).format(date);
+			}
+			return dateText;
+		} else {
+			return "unknown";
+		}
+	}
 }

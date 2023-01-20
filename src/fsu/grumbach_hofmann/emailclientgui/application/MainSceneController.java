@@ -1,6 +1,7 @@
 package fsu.grumbach_hofmann.emailclientgui.application;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -73,9 +74,9 @@ public class MainSceneController {
 
 	@FXML
 	private WebView messageWebView;
-	
-    @FXML
-    private HBox messagesMenuBar;
+
+	@FXML
+	private HBox messagesMenuBar;
 
 	@FXML
 	private ListView<MailObject> messagesList;
@@ -107,8 +108,6 @@ public class MainSceneController {
 	private Account selectedAccount;
 	private NewAccountSceneController newAccountSceneController;
 	private SendSceneController sendSceneController;
-
-	private LocalDateTime messageDate;
 
 	public void initController(DataHandler handler, MailReceiver receiver, MailSender sender) {
 		this.handler = handler;
@@ -158,10 +157,10 @@ public class MainSceneController {
 
 	@FXML
 	void removeAccount(ActionEvent event) {
-		if(selectedAccount == null) {
+		if (selectedAccount == null) {
 			return;
 		}
-		
+
 		handler.removeAccount(selectedAccount);
 		updateAccountsList();
 
@@ -205,8 +204,8 @@ public class MainSceneController {
 	}
 
 	private void initMessagesElements() {
-		messageDisplayScrollPane.setMinWidth(messagesMenuBar.getWidth()+15);
-		
+		messageDisplayScrollPane.setMinWidth(messagesMenuBar.getWidth() + 15);
+
 		messageDisplayPane.setVisible(false);
 		messagesList.setCellFactory(new MailCellFactory());
 		messagesList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -218,15 +217,8 @@ public class MainSceneController {
 
 				messageDisplayPane.setVisible(true);
 				senderLabel.setText(newSelection.getFrom());
-				messageDate = newSelection.getDateSent();
-				if (messageDate != null) {
-					String dateText = DateTimeFormatter.ofPattern("dd.MM.yy", Locale.GERMANY).format(messageDate);
-					dateText += " at ";
-					dateText += DateTimeFormatter.ofPattern("hh:mm", Locale.GERMANY).format(messageDate);
-					dateLabel.setText(dateText);
-				} else {
-					dateLabel.setText("unknown");
-				}
+				dateLabel.setText(dateCalc(newSelection.getDateSent()));
+				
 				subjectLabel.setText(newSelection.getSubject());
 				recipientsLabel.setText(newSelection.getTo());
 				if (!newSelection.getContent().equals("")) {
@@ -238,8 +230,8 @@ public class MainSceneController {
 					messageWebView.getEngine().loadContent("<html><body>" + "<div id=\"jmcdiv\">"
 							+ newSelection.getHtml() + "</div>" + "</body></html>");
 					adjustWebViewHeight();
-					messageWebView.setMinWidth(messageDisplayPane.getWidth()-10);
-					messageWebView.setMaxWidth(messageDisplayPane.getWidth()-10);
+					messageWebView.setMinWidth(messageDisplayPane.getWidth() - 10);
+					messageWebView.setMaxWidth(messageDisplayPane.getWidth() - 10);
 					messageWebView.setVisible(true);
 					messageWebView.setManaged(true);
 				}
@@ -247,34 +239,35 @@ public class MainSceneController {
 				messagesList.refresh();
 			}
 		});
-		
+
 		messageDisplayScrollPane.widthProperty().addListener(new ChangeListener<Object>() {
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				messageDisplayPane.setMaxWidth(messageDisplayScrollPane.getWidth()-30);
-				messageDisplayPane.setMinWidth(messageDisplayScrollPane.getWidth()-30);
+				messageDisplayPane.setMaxWidth(messageDisplayScrollPane.getWidth() - 30);
+				messageDisplayPane.setMinWidth(messageDisplayScrollPane.getWidth() - 30);
 			}
 		});
-		
-		//webview:
+
+		// webview:
 		// fit webview to container
 		messageDisplayPane.widthProperty().addListener(new ChangeListener<Object>() {
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				if (messageWebView.isVisible() && messageDisplayPane.isVisible()) {
-					messageWebView.setMinWidth(messageDisplayPane.getWidth()-10);
-					messageWebView.setMaxWidth(messageDisplayPane.getWidth()-10);
+					messageWebView.setMinWidth(messageDisplayPane.getWidth() - 10);
+					messageWebView.setMaxWidth(messageDisplayPane.getWidth() - 10);
 				}
 			}
 		});
-		
+
 		messageWebView.getEngine().getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
-		    @Override
-		    public void changed(ObservableValue<? extends State> arg0, State oldState, State newState) {
-		        if (newState == State.SUCCEEDED) {
-		        	adjustWebViewHeight();
-		        }    
-		    }
+			@Override
+			public void changed(ObservableValue<? extends State> arg0, State oldState, State newState) {
+				if (newState == State.SUCCEEDED) {
+					adjustWebViewHeight();
+				}
+			}
 		});
-		messageWebView.getEngine().setUserStyleSheetLocation(getClass().getResource("/style/webview.css").toExternalForm());
+		messageWebView.getEngine()
+				.setUserStyleSheetLocation(getClass().getResource("/style/webview.css").toExternalForm());
 	}
 
 	private void initAccountList() {
@@ -336,6 +329,24 @@ public class MainSceneController {
 	private void updateUnseenMessageCount() {
 		totalMessagesLabel.setText(handler.getMailsCount(selectedAccount) + " messages found | "
 				+ handler.getUnseenMessageCount(selectedAccount) + " unseen.");
+	}
+	
+	private String dateCalc(LocalDateTime date) {
+		if (date != null) {
+			String dateText="";
+			DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
+			if(fmt.format(date).equals(fmt.format(LocalDateTime.now()))) {
+				dateText = "Today";
+			}else if(fmt.format(date).equals(fmt.format(LocalDateTime.now().minusDays(1)))) {
+				dateText = "Yesterday";
+			}else {
+			dateText = DateTimeFormatter.ofPattern("dd.MM.yy", Locale.GERMANY).format(date);
+			}
+			dateText+= (" at " + DateTimeFormatter.ofPattern("hh:mm", Locale.GERMANY).format(date));
+			return dateText;
+		} else {
+			return "unknown";
+		}
 	}
 
 	private void adjustWebViewHeight() {

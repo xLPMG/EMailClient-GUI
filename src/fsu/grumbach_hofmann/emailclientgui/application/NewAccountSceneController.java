@@ -2,7 +2,7 @@ package fsu.grumbach_hofmann.emailclientgui.application;
 
 import java.util.ArrayList;
 
-import fsu.grumbach_hofmann.emailclientgui.mail.MailSender;
+import fsu.grumbach_hofmann.emailclientgui.mail.MailUtils;
 import fsu.grumbach_hofmann.emailclientgui.util.DataHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,15 +46,15 @@ public class NewAccountSceneController {
 	private TextField newAccUsernameTextField;
 
 	private DataHandler handler;
-	private MailSender sender;
+	private MailUtils mailUtils;
 	private ArrayList<TextField> textFieldArrayList;
 
-	public void initController(DataHandler handler, MailSender sender) {
+	public void initController(DataHandler handler, MailUtils mailUtils) {
 		this.handler = handler;
-		this.sender=sender;
+		this.mailUtils = mailUtils;
 		initTextFieldArrayList();
 	}
-	
+
 	private void initTextFieldArrayList() {
 		textFieldArrayList = new ArrayList();
 		textFieldArrayList.add(newAccEmailTextField);
@@ -70,48 +70,49 @@ public class NewAccountSceneController {
 
 	@FXML
 	void addAccount(ActionEvent event) {
-		
-		if(!isCorrectInput()) {
+
+		if (!isCorrectInput()) {
 			return;
 		}
-		
+
 		int inPort = Integer.parseInt(newAccInboxPortTextField.getText());
 		int outPort = Integer.parseInt(newAccOutboxPortTextField.getText());
-		
-		int emailExceptionCode = sender.isCorrectEmail(newAccOutboxAddressTextField.getText(), outPort, newAccEmailTextField.getText(), newAccPasswordTextField.getText());
-		if(emailExceptionCode==2) {
+
+		int emailExceptionCode = mailUtils.isCorrectEmail(newAccOutboxAddressTextField.getText(), outPort,
+				newAccEmailTextField.getText(), newAccPasswordTextField.getText());
+		if (emailExceptionCode == 2) {
 			newAccEmailTextField.setText("");
 			newAccEmailTextField.setPromptText("Wrong input");
 			newAccPasswordTextField.setText("");
 			newAccPasswordTextField.setPromptText("Wrong input");
 			return;
-		}else if(emailExceptionCode==3) {
+		} else if (emailExceptionCode == 3) {
 			newAccOutboxAddressTextField.setText("");
 			newAccOutboxAddressTextField.setPromptText("Wrong input");
 			newAccOutboxPortTextField.setText("");
 			newAccOutboxPortTextField.setPromptText("Wrong input");
 			return;
 		}
-		
+
 		handler.addAccount(newAccUsernameTextField.getText(), newAccEmailTextField.getText(),
 				newAccPasswordTextField.getText(), newAccNameTextField.getText(), newAccSurnameTextField.getText(),
 				newAccInboxAddressTextField.getText(), inPort, newAccOutboxAddressTextField.getText(), outPort);
 		Stage stage = (Stage) newAccAddButton.getScene().getWindow();
-	    stage.close();
+		stage.close();
 	}
 
 	@FXML
 	void cancelAction(ActionEvent event) {
 		Stage stage = (Stage) newAccCancelButton.getScene().getWindow();
-	    stage.close();
+		stage.close();
 	}
-	
+
 	private boolean isCorrectInput() {
-		boolean correct=true;
-		for(TextField tf : textFieldArrayList) {
-			if(tf.getText().equals("")) {
+		boolean correct = true;
+		for (TextField tf : textFieldArrayList) {
+			if (tf.getText().equals("")) {
 				tf.setPromptText("missing input.");
-				correct=false;
+				correct = false;
 			}
 		}
 		if (!newAccInboxPortTextField.getText().matches("[0-9]+")

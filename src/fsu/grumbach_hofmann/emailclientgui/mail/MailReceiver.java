@@ -1,14 +1,14 @@
 package fsu.grumbach_hofmann.emailclientgui.mail;
 
-import java.io.IOException;
 import java.security.NoSuchProviderException;
+import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
-import javax.mail.BodyPart;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Store;
 
@@ -17,13 +17,25 @@ import fsu.grumbach_hofmann.emailclientgui.util.DataHandler;
 
 public class MailReceiver {
 
-	DataHandler dH;
+	private DataHandler handler;
+	private HashMap<Account, Boolean> isLockedMap;
 	
-	public MailReceiver(DataHandler dH) {
-		this.dH=dH;
+	public MailReceiver(DataHandler handler) {
+		this.handler=handler;
+		isLockedMap=new HashMap<>();
 	}
 	
-	public void receiveMails(Account acc) {
+	public void receiveMails(Account acc, int n) {
+		if(!isLockedMap.containsKey(acc)) {
+			isLockedMap.put(acc, true);
+		}else {
+			if(isLockedMap.get(acc)) {
+				return;
+			}else {
+				isLockedMap.put(acc, true);
+			}
+		}
+		long startTime = System.currentTimeMillis();
 		try {
 			String serverAddress = acc.getInbox();
 			int serverPort = acc.getInboxPort();
@@ -37,12 +49,6 @@ public class MailReceiver {
 			// use pop3s instead of pop3 to enable ssl/tls encryption
 			Store store = emailSession.getStore("pop3s");
 			store.connect(serverAddress, username, password);
-
-			Folder[] folders = store.getDefaultFolder().list("*");
-		    for (Folder folder : folders) {
-		            System.out.println(folder.getFullName() + ": " + folder.getMessageCount());
-		    }
-			
 			Folder inboxFolder = store.getFolder("INBOX");
 			if (inboxFolder == null) {
 				throw new Exception("Invalid folder");
@@ -51,15 +57,22 @@ public class MailReceiver {
 
 			Message[] messages = inboxFolder.getMessages();
 			System.out.println("DEBUG: Loading messages");
-			int i = messages.length-1;
-			while(i>0) {
-				System.out.println((messages.length-i)+"/"+messages.length);
-				dH.saveMail(messages[i], username, false);
-				i--;
-			}
-			dH.loadMails(acc);
-			inboxFolder.close(false);
+			saveMails(messages, acc, n);
+			handler.loadMails(acc);
+			inboxFolder.close();
 			store.close();
+			
+			long endTime = System.currentTimeMillis();
+			long execTime = endTime-startTime;
+			long execTimeMessageM;
+			if(n==-1) {
+				execTimeMessageM = execTime/messages.length;
+			}else {
+				execTimeMessageM = execTime/n;
+			}
+			DecimalFormat df = new DecimalFormat("##.####");
+			float execTimeMessageS = (float)execTimeMessageM/1000;
+		     System.out.println(acc.getUsername()+": Execution time per message: " + execTimeMessageM + "ms ("+df.format(execTimeMessageS)+"s)"); 
 		} catch (NoSuchProviderException e) {
 			e.printStackTrace();
 		} catch (MessagingException e) {
@@ -67,6 +80,24 @@ public class MailReceiver {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		isLockedMap.put(acc, false);
 	}
+	
+	private void saveMails(Message[] messages, Account account, int n) {
+		int i = messages.length-1;
+		int max = n;
+		int limit = i-n;
+		if(limit<0 || n==-1) {
+			limit=0;
+			max=i;
+		}
+		while(i>limit) {
+			int perc = (int)(((float)(messages.length-i)/(float)(max))*100);
+			System.out.println(account.getUsername()+":"+perc+"%");
+			handler.saveMail(messages[i], account.getUsername(), false);
+			i--;
+		}
+	}
+
 }
 

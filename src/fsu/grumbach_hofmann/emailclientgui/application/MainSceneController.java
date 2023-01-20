@@ -158,6 +158,10 @@ public class MainSceneController {
 
 	@FXML
 	void removeAccount(ActionEvent event) {
+		if(selectedAccount == null) {
+			return;
+		}
+		
 		handler.removeAccount(selectedAccount);
 		updateAccountsList();
 

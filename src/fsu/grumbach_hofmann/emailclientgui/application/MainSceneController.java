@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+import javax.mail.Message;
+
 import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailReceiver;
 import fsu.grumbach_hofmann.emailclientgui.mail.MailSender;
@@ -47,9 +49,9 @@ public class MainSceneController {
 
 	@FXML
 	private MenuItem addAccountItem;
-	
+
 	@FXML
-    private Button btnDeleteMail;
+	private Button btnDeleteMail;
 
 	@FXML
 	private Button btnReceiveMails;
@@ -109,18 +111,19 @@ public class MainSceneController {
 	private MailReceiver receiver;
 	private MailSender sender;
 	private MailUtils mailUtils;
-	
+
 	private Account selectedAccount;
 	private NewAccountSceneController newAccountSceneController;
 	private SendSceneController sendSceneController;
-	
+
 	private MailObject selectedMail;
 
 	public void initController() {
-		handler = new DataHandler();
+		mailUtils = new MailUtils();
+
+		handler = new DataHandler(mailUtils);
 		receiver = new MailReceiver(handler);
 		sender = new MailSender();
-		mailUtils = new MailUtils();
 	}
 
 	public void postInitController() {
@@ -136,9 +139,15 @@ public class MainSceneController {
 		ImageView btnWriteNewMailImgView = new ImageView(btnWriteNewMailImg);
 		btnWriteNewMailImgView.setFitHeight(btnWriteMail.getHeight());
 		btnWriteNewMailImgView.setPreserveRatio(true);
+		
+		Image btnDeleteMailImg = new Image("deleteMailIcon.png");
+		ImageView btnDeleteMailImgView = new ImageView(btnDeleteMailImg);
+		btnDeleteMailImgView.setFitHeight(btnDeleteMail.getHeight());
+		btnDeleteMailImgView.setPreserveRatio(true);
 
 		btnReceiveMails.setGraphic(btnReceiveMailsImgView);
 		btnWriteMail.setGraphic(btnWriteNewMailImgView);
+		btnDeleteMail.setGraphic(btnDeleteMailImgView);
 	}
 
 	@FXML
@@ -184,7 +193,7 @@ public class MainSceneController {
 		handler.loadMails(selectedAccount);
 		inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
 		new Thread(() -> {
-			receiver.receiveMails(selectedAccount);
+			receiver.receiveMails(selectedAccount, -1);
 			Platform.runLater(() -> {
 				updateMessagesList();
 			});
@@ -210,20 +219,22 @@ public class MainSceneController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@FXML
-    void deleteMail(ActionEvent event) {
-		if(selectedMail==null)
+	void deleteMail(ActionEvent event) {
+		if (selectedMail == null)
 			return;
 		
-		try {
-			mailUtils.deleteMailFromServer(selectedMail, selectedAccount);
-			handler.deleteMail(selectedMail, selectedAccount);
-			updateMessagesList();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-    }
+		handler.deleteMail(selectedMail, selectedAccount);
+		updateMessagesList();
+		new Thread(() -> {
+			try {
+				mailUtils.deleteMailFromServer(selectedMail, selectedAccount);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+	}
 
 	private void initMessagesElements() {
 		messageDisplayScrollPane.setMinWidth(messagesMenuBar.getWidth() + 15);
@@ -240,7 +251,7 @@ public class MainSceneController {
 				messageDisplayPane.setVisible(true);
 				senderLabel.setText(newSelection.getFrom());
 				dateLabel.setText(dateCalc(newSelection.getDateSent()));
-				
+
 				subjectLabel.setText(newSelection.getSubject());
 				recipientsLabel.setText(newSelection.getTo());
 				if (!newSelection.getContent().equals("")) {
@@ -310,13 +321,13 @@ public class MainSceneController {
 							handler.loadMails(acc);
 							updateMessagesList();
 							// TODO: receive all new mails on account switch?
-//							inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
-//							new Thread(() -> {
-//								receiver.receiveMails(selectedAccount);
-//								Platform.runLater(() -> {
-//									updateMessagesList();
-//								});
-//							}).start();
+							inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
+							new Thread(() -> {
+								receiver.receiveMails(selectedAccount, 10);
+								Platform.runLater(() -> {
+									updateMessagesList();
+								});
+							}).start();
 						}
 					}
 				}
@@ -352,19 +363,19 @@ public class MainSceneController {
 		totalMessagesLabel.setText(handler.getMailsCount(selectedAccount) + " messages found | "
 				+ handler.getUnseenMessageCount(selectedAccount) + " unseen.");
 	}
-	
+
 	private String dateCalc(LocalDateTime date) {
 		if (date != null) {
-			String dateText="";
+			String dateText = "";
 			DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
-			if(fmt.format(date).equals(fmt.format(LocalDateTime.now()))) {
+			if (fmt.format(date).equals(fmt.format(LocalDateTime.now()))) {
 				dateText = "Today";
-			}else if(fmt.format(date).equals(fmt.format(LocalDateTime.now().minusDays(1)))) {
+			} else if (fmt.format(date).equals(fmt.format(LocalDateTime.now().minusDays(1)))) {
 				dateText = "Yesterday";
-			}else {
-			dateText = DateTimeFormatter.ofPattern("dd.MM.yy", Locale.GERMANY).format(date);
+			} else {
+				dateText = DateTimeFormatter.ofPattern("dd.MM.yy", Locale.GERMANY).format(date);
 			}
-			dateText+= (" at " + DateTimeFormatter.ofPattern("hh:mm", Locale.GERMANY).format(date));
+			dateText += (" at " + DateTimeFormatter.ofPattern("hh:mm", Locale.GERMANY).format(date));
 			return dateText;
 		} else {
 			return "unknown";

@@ -33,6 +33,11 @@
  .highlightLabel {
      -fx-text-fill: #0A84FF;
 }
+
+ .highlightNegativeLabel {
+     -fx-text-fill: #FF453A;
+}
+
  .separator {
      -fx-background-color: #54545899;
 }

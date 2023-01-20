@@ -9,6 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,9 +39,10 @@ public class DataHandler {
 	private File emailFolder;
 	private AES aes;
 	private String keycode;
-	private MailUtils mU;
+	private MailUtils mailUtils;
 
-	public DataHandler() {
+	public DataHandler(MailUtils mailUtils) {
+		this.mailUtils = mailUtils;
 		os = System.getProperty("os.name").toLowerCase();
 		init();
 		loadAccountData();
@@ -45,7 +50,6 @@ public class DataHandler {
 	}
 
 	private void init() {
-		mU = new MailUtils();
 		if (os.contains("win")) {
 			programFolder = new File(System.getenv("APPDATA") + "/JEMC-GrumHofm");
 			if (!programFolder.exists()) {
@@ -225,16 +229,11 @@ public class DataHandler {
 	
 	public void saveMail(Message message, String username, boolean force) {
 		try {
-			String fileNameRaw="NoSender";
-			if(message.getFrom()!=null) {
-				fileNameRaw = message.getSentDate() + "-" + message.getFrom()[0] + ".eml";
-			}
-			String fileName = fileNameRaw.replace(" ", "_").replace("/", "|");
 			File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + username);
 			if (!userSubdirectory.exists()) {
 				userSubdirectory.mkdirs();
 			}
-			File mailFile = new File(userSubdirectory.getAbsolutePath() + "/" + fileName);
+			File mailFile = new File(userSubdirectory.getAbsolutePath() + "/" + mailUtils.getMessageHash(message));
 			if (force) {
 				message.writeTo(new FileOutputStream(mailFile));
 			} else {
@@ -270,7 +269,7 @@ public class DataHandler {
 					InputStream source = new FileInputStream(mailFile);
 					MimeMessage m = new MimeMessage(emailSession, source);
 					boolean isSeen = isMessageSeen(m, acc);;
-					MailObject newMO = new MailObject(m, mU, isSeen);
+					MailObject newMO = new MailObject(m, mailUtils, isSeen);
 					mailList.add(newMO);
 					if (!isSeen) {
 						unseenMessageCount.put(acc, unseenMessageCount.getOrDefault(acc, 0) + 1);
@@ -300,24 +299,15 @@ public class DataHandler {
 	
 	public void deleteMail(MailObject mailObject, Account account) {
 		Message message = mailObject.getMessage();
-		try {
-			String fileNameRaw="NoSender";
-			if(message.getFrom()!=null) {
-				fileNameRaw = message.getSentDate() + "-" + message.getFrom()[0] + ".eml";
-			}
-			String fileName = fileNameRaw.replace(" ", "_").replace("/", "|");
-			File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + account.getUsername());
-			if (!userSubdirectory.exists()) {
-				return;
-			}
-			File mailFile = new File(userSubdirectory.getAbsolutePath() + "/" + fileName);
-			if(mailFile.exists()) {
-				mailFile.delete();
-			}
-			mailListMap.get(account).remove(mailObject);
-		} catch (MessagingException e) {
-			e.printStackTrace();
+		File userSubdirectory = new File(emailFolder.getAbsolutePath() + "/" + account.getUsername());
+		if (!userSubdirectory.exists()) {
+			return;
 		}
+		File mailFile = new File(userSubdirectory.getAbsolutePath() + "/" + mailUtils.getMessageHash(message));
+		if(mailFile.exists()) {
+			mailFile.delete();
+		}
+		mailListMap.get(account).remove(mailObject);
 	}
 
 	private boolean isMessageSeen(Message message, Account account) {

@@ -224,6 +224,7 @@ public class MainSceneController {
 			return;
 		
 		handler.deleteMail(selectedMail, selectedAccount);
+		messageDisplayPane.setVisible(false);
 		updateMessagesList();
 		new Thread(() -> {
 			try {

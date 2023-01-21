@@ -26,7 +26,7 @@
          <children>
             <BorderPane HBox.hgrow="ALWAYS">
                <bottom>
-                  <Pane nodeOrientation="RIGHT_TO_LEFT" styleClass="secondarySystemBackground">
+                  <Pane nodeOrientation="RIGHT_TO_LEFT" styleClass="systemBackground">
                      <children>
                         <AnchorPane>
                            <children>
@@ -63,7 +63,7 @@
                               </ListView>
                            </children>
                         </VBox>
-                        <VBox styleClass="tertiarySystemBackground">
+                        <VBox styleClass="systemBackground">
                            <children>
                               <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" styleClass="systemBackground" VBox.vgrow="ALWAYS">
                                  <children>
@@ -142,7 +142,7 @@
                                     <Insets bottom="10.0" left="10.0" right="10.0" />
                                  </padding>
                                  <VBox.margin>
-                                    <Insets />
+                                    <Insets right="10.0" />
                                  </VBox.margin></ScrollPane>
                            </children>
                         </VBox>
@@ -156,8 +156,8 @@
                            <menus>
                               <Menu fx:id="accountsMenuItem" mnemonicParsing="false" text="Settings">
                                 <items>
-                                  <MenuItem fx:id="addAccountItem" mnemonicParsing="false" onAction="#addAccount" text="Add account" />
-                                    <MenuItem fx:id="removeAccountItem" mnemonicParsing="false" onAction="#removeAccount" text="Remove account" />
+                                  <MenuItem fx:id="addAccountItem" mnemonicParsing="false" onAction="#addAccount" text="Add an account" />
+                                    <MenuItem fx:id="removeAccountItem" mnemonicParsing="false" onAction="#removeAccount" text="Remove selected account" />
                                 </items>
                               </Menu>
                            </menus>

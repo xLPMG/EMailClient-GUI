@@ -11,6 +11,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
@@ -34,8 +36,16 @@ public class MailCell extends ListCell<MailObject> {
     @FXML
     private BorderPane cellBorderPane;
     
-    public MailCell() {
+    @FXML
+    private ImageView seenIndicatorImage;
+    
+    private Image blueDotImg;
+    private Image transparentDotImg;
+    
+    public MailCell(Image blueDotImg, Image transparentDotImg) {
         loadFXML();
+		this.blueDotImg = blueDotImg;
+		this.transparentDotImg = transparentDotImg;
     }
 
     private void loadFXML() {
@@ -58,12 +68,13 @@ public class MailCell extends ListCell<MailObject> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }
         else {
+
         	if (mailObject.isSeen()) {
-        		cellLabelSender.setStyle("-fx-text-fill:#FFFFFFFF; -fx-font-size: 14.0pt");
+        		seenIndicatorImage.setImage(transparentDotImg);
 			}else {
-				cellLabelSender.setStyle("-fx-text-fill:#0A84FFFF; -fx-font-size: 16.0pt");
+				seenIndicatorImage.setImage(blueDotImg);
 			}
-        	
+        	cellLabelSender.setStyle("-fx-font-size: 14.0pt");
         	cellLabelSender.setText(mailObject.getFrom());
         	cellLabelDate.setText(dateCalc(mailObject.getDateSent()));
         	
@@ -105,4 +116,13 @@ public class MailCell extends ListCell<MailObject> {
 			return "unknown";
 		}
 	}
+
+	public void setBlueDotImg(Image blueDotImg) {
+		this.blueDotImg = blueDotImg;
+	}
+
+	public void setTransparentDotImg(Image transparentDotImg) {
+		this.transparentDotImg = transparentDotImg;
+	}
+    
 }

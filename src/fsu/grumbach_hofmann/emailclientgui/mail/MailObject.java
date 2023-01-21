@@ -36,7 +36,7 @@ public class MailObject implements Comparable<MailObject> {
 			}
 			content = mailUtils.getTextFromMessage(message);
 			html = mailUtils.getHTMLFromMessage(message);
-			preview = content.substring(0, Math.min(content.length(), 100)).replace("\n", " ").replace("\r", " ");
+			preview = content.substring(0, Math.min(content.length(), 100)).replace("\n", " ").replace("\r", " ")+"...";
 			if(message.getSentDate()!=null) {
 				dateSent = Instant.ofEpochMilli(message.getSentDate().getTime()).atZone(ZoneId.systemDefault())
 						.toLocalDateTime();
@@ -47,7 +47,6 @@ public class MailObject implements Comparable<MailObject> {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -64,56 +63,28 @@ public class MailObject implements Comparable<MailObject> {
 		return subject==null ? "Unknown subject" : subject;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
 	public String getFrom() {
 		return from==null ? "Unknown sender" : from;
-	}
-
-	public void setFrom(String from) {
-		this.from = from;
 	}
 
 	public String getTo() {
 		return to==null ? "Unknown recipient" : to;
 	}
 
-	public void setTo(String to) {
-		this.to = to;
-	}
-
 	public LocalDateTime getDateSent() {
 		return dateSent;
-	}
-
-	public void setDateSent(LocalDateTime dateSent) {
-		this.dateSent = dateSent;
 	}
 
 	public String getPreview() {
 		return preview==null ? "No preview available" : preview;
 	}
-
-	public void setPreview(String preview) {
-		this.preview = preview;
-	}
 	
 	public String getContent() {
 		return content==null ? "" : content;
 	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
 	
 	public String getHtml() {
 		return html==null ? "No html available" : html;
-	}
-
-	public void setHtml(String html) {
-		this.html = html;
 	}
 	
 	public Message getMessage() {

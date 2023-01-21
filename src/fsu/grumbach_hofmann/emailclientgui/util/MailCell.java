@@ -49,9 +49,11 @@ public class MailCell extends ListCell<MailObject> {
         }
     }
 
+    
+    
     @Override
     protected void updateItem(MailObject mailObject, boolean empty) {
-        super.updateItem(mailObject, empty);
+        
 
         if(empty || mailObject == null) {
             setText(null);
@@ -59,9 +61,9 @@ public class MailCell extends ListCell<MailObject> {
         }
         else {
         	if (mailObject.isSeen()) {
-				cellLabelSender.getStyleClass().remove("message-unseen");
+        		cellLabelSender.setStyle("-fx-text-fill:#FFFFFF; -fx-font-size: 14.0pt");
 			}else {
-				cellLabelSender.getStyleClass().add("message-unseen");
+				cellLabelSender.setStyle("-fx-text-fill:#0A84FF; -fx-font-size: 16.0pt");
 			}
         	
         	cellLabelSender.setText(mailObject.getFrom());
@@ -72,8 +74,8 @@ public class MailCell extends ListCell<MailObject> {
         	
         	cellLabelSender.setWrapText(false);
         	cellLabelDate.setWrapText(false);
-        	cellLabelSender.maxWidthProperty().bind(this.widthProperty().divide(2));
-        	cellLabelDate.maxWidthProperty().bind(this.widthProperty().divide(2));
+        	cellLabelSender.maxWidthProperty().bind(this.widthProperty().divide(4).multiply(3));
+        	cellLabelDate.maxWidthProperty().bind(this.widthProperty().divide(4));
         	
         	cellBorderPane.maxWidthProperty().bind(this.widthProperty().subtract(30));
         	
@@ -86,6 +88,7 @@ public class MailCell extends ListCell<MailObject> {
         	setGraphic(cellMainPane);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
+        super.updateItem(mailObject, empty);
     }
     
     private String dateCalc(LocalDateTime date) {

@@ -1,6 +1,10 @@
 package fsu.grumbach_hofmann.emailclientgui.mail;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
 import fsu.grumbach_hofmann.emailclientgui.util.Account;
@@ -16,9 +20,9 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.MimeMultipart;
 
 public class MailUtils {
-	
+
 	private Session session = null;
-	
+
 	public MailUtils() {
 		// TODO Rework: Interface MailSessionProvider
 		Properties props = new Properties();
@@ -26,11 +30,11 @@ public class MailUtils {
 		props.put("mail.smtp.auth", "true");
 		session = Session.getInstance(props, null);
 	}
-	
+
 	public MailUtils(Session session) {
 		this.session = session;
 	}
-	
+
 	public String getTextFromMessage(Message message) throws MessagingException, IOException {
 		if (message.isMimeType("text/plain")) {
 			return message.getContent().toString();
@@ -106,10 +110,10 @@ public class MailUtils {
 			transport.connect(outboxAddress, outboxPort, email, password);
 			transport.close();
 		} catch (AuthenticationFailedException e) {
-			System.out.println("falsche email / passwort");
+//			System.out.println("falsche email / passwort");
 			return MailCheckResult.AUTHENTICATION_FAILED;
 		} catch (MessagingException e) {
-			System.out.println("falscher server");
+//			System.out.println("falscher server");
 			return MailCheckResult.WRONG_SERVER;
 		}
 		return MailCheckResult.OK;
@@ -155,18 +159,44 @@ public class MailUtils {
 	}
 
 	public String getMessageHash(Message message) {
-		try {			
-			String subject = message.getSubject()!=null ? message.getSubject() : "unknown_subject";
+		try {
+			String subject = message.getSubject() != null ? message.getSubject() : "unknown_subject";
 			subject = subject.substring(0, Math.min(subject.length(), 40));
-			String date = message.getSentDate()!=null ? message.getSentDate()+"" : "unknown_date";
-			String sender = message.getFrom()!=null ? message.getFrom()[0]+"" : "unknown_sender";
+			String date = message.getSentDate() != null ? message.getSentDate() + "" : "unknown_date";
+			String sender = message.getFrom() != null ? message.getFrom()[0] + "" : "unknown_sender";
 			sender = sender.substring(0, Math.min(sender.length(), 20));
-			String fileNameRaw=subject+"-"+date+"-"+sender+".eml";
-			String fileName = fileNameRaw.replace(" ", "_").replace("/", "|");
-			return fileName;
+			String fileNameRaw = subject + "-" + date + "-" + sender;
+
+			return createSHAHash(fileNameRaw);
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
 		return "unknow_file";
 	}
+
+	public String createSHAHash(String input) {
+
+		String hashtext = null;
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return input;
+		}
+		byte[] messageDigest = md.digest(input.getBytes(StandardCharsets.UTF_8));
+
+		hashtext = convertToHex(messageDigest);
+		return hashtext;
+	}
+
+	private String convertToHex(final byte[] messageDigest) {
+		BigInteger bigint = new BigInteger(1, messageDigest);
+		String hexText = bigint.toString(16);
+		while (hexText.length() < 32) {
+			hexText = "0".concat(hexText);
+		}
+		return hexText;
+	}
+
 }

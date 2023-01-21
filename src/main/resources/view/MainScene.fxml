@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<VBox id="mainContainer" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fsu.grumbach_hofmann.emailclientgui.application.MainSceneController">
+  <children>
+      <HBox VBox.vgrow="ALWAYS">
+         <children>
+            <BorderPane HBox.hgrow="ALWAYS">
+               <bottom>
+                  <Pane nodeOrientation="RIGHT_TO_LEFT" styleClass="systemBackground">
+                     <children>
+                        <AnchorPane>
+                           <children>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="secondaryLabel" text="Luca-Philipp Grumbach &amp; Richard Hofmann, 2022-23" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </Pane>
+               </bottom>
+               <center>
+                  <SplitPane fx:id="splitPane" dividerPositions="0.5" BorderPane.alignment="CENTER">
+                    <items>
+                        <VBox styleClass="systemBackground">
+                           <children>
+                              <Pane maxHeight="-Infinity" prefHeight="50.0" styleClass="systemBackground" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <VBox>
+                                       <children>
+                                          <Label id="inboxLabel" fx:id="inboxLabel" styleClass="primarylabel" text="Inbox" wrapText="true" VBox.vgrow="ALWAYS">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="totalMessagesLabel" styleClass="secondaryLabel" text="No messages found" VBox.vgrow="ALWAYS" />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                                       </padding>
+                                    </VBox>
+                                 </children>
+                              </Pane>
+                              <ListView fx:id="messagesList" styleClass="systemBackground" VBox.vgrow="ALWAYS">
+                              
+                              </ListView>
+                           </children>
+                        </VBox>
+                        <VBox styleClass="systemBackground">
+                           <children>
+                              <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" styleClass="systemBackground" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <HBox fx:id="messagesMenuBar" alignment="CENTER_LEFT" maxHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0">
+                                       <children>
+                                          <Button fx:id="btnReceiveMails" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#receiveMails" prefHeight="40.0" prefWidth="40.0" styleClass="imageButton">
+                                             <padding>
+                                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                             </padding>
+                                             <HBox.margin>
+                                                <Insets left="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                          <Button fx:id="btnWriteMail" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#writeMail" prefHeight="40.0" prefWidth="40.0" styleClass="imageButton">
+                                             <padding>
+                                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                             </padding>
+                                             <HBox.margin>
+                                                <Insets left="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                          <Button fx:id="btnDeleteMail" mnemonicParsing="false" onAction="#deleteMail" prefHeight="30.0" prefWidth="30.0" styleClass="imageButton">
+                                             <padding>
+                                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                             </padding>
+                                             <HBox.margin>
+                                                <Insets left="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </Pane>
+                              <ScrollPane fx:id="messageDisplayScrollPane" fitToWidth="true" hbarPolicy="NEVER" styleClass="systemBackground" VBox.vgrow="ALWAYS">
+                                 <content>
+                                    <AnchorPane fx:id="messageDisplayPane" style="-fx-background-radius: 5 5 5 5;" styleClass="secondarySystemBackground" stylesheets="@../style/DarkTheme.css">
+                                       <children>
+                                          <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <BorderPane VBox.vgrow="ALWAYS">
+                                                   <left>
+                                                      <Label fx:id="senderLabel" styleClass="primarylabel" text="Sender" BorderPane.alignment="CENTER">
+                                                         <font>
+                                                            <Font size="15.0" />
+                                                         </font></Label>
+                                                   </left>
+                                                   <right>
+                                                      <Label fx:id="dateLabel" styleClass="tertiaryLabel" text="Date" BorderPane.alignment="CENTER" />
+                                                   </right>
+                                                </BorderPane>
+                                                <Label fx:id="subjectLabel" styleClass="primarylabel" text="Subject" />
+                                                <HBox VBox.vgrow="ALWAYS">
+                                                   <children>
+                                                      <Label fx:id="toTextLabel" styleClass="secondaryLabel" text="To: " />
+                                                      <Label fx:id="recipientsLabel" styleClass="tertiaryLabel" text="recipients">
+                                                         <padding>
+                                                            <Insets bottom="3.0" />
+                                                         </padding></Label>
+                                                   </children>
+                                                </HBox>
+                                                <Separator fx:id="messageSperarator" style="-fx-background-color: black;" />
+                                                <Label fx:id="contentLabel" styleClass="secondaryLabel" text="Text" wrapText="true">
+                                                   <padding>
+                                                      <Insets top="3.0" />
+                                                   </padding></Label>
+                                                <WebView fx:id="messageWebView" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets right="10.0" />
+                                 </VBox.margin></ScrollPane>
+                           </children>
+                        </VBox>
+                    </items>
+                  </SplitPane>
+               </center>
+               <top>
+                  <HBox styleClass="systemBackground" BorderPane.alignment="CENTER">
+                     <children>
+                        <MenuBar id="menubar" minHeight="25.0" styleClass="systemBackground">
+                           <menus>
+                              <Menu fx:id="accountsMenuItem" mnemonicParsing="false" text="Settings">
+                                <items>
+                                  <MenuItem fx:id="addAccountItem" mnemonicParsing="false" onAction="#addAccount" text="Add an account" />
+                                    <MenuItem fx:id="removeAccountItem" mnemonicParsing="false" onAction="#removeAccount" text="Remove selected account" />
+                                </items>
+                              </Menu>
+                           </menus>
+                        </MenuBar>
+                        <ChoiceBox id="accountsDropdown" fx:id="accountsDropdown" maxWidth="150.0" minWidth="100.0" HBox.hgrow="ALWAYS">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <HBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </HBox.margin>
+                        </ChoiceBox>
+                     </children>
+                  </HBox>
+               </top>
+            </BorderPane>
+         </children>
+      </HBox>
+  </children>
+   <stylesheets>
+      <URL value="@../style/DarkTheme.css" />
+      <URL value="@../style/MainScene.css" />
+   </stylesheets>
+</VBox>

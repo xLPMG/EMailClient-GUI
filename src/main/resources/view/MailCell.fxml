@@ -11,14 +11,14 @@
 
 <AnchorPane fx:id="cellMainPane" nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-color: transparent; -fx-border-color: #1C1C1EFF; -fx-border-width: 1px 0px 0px 0px;" stylesheets="@../style/DarkTheme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox prefHeight="100.0" prefWidth="200.0">
+      <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ImageView fx:id="seenIndicatorImage" fitHeight="10.0" fitWidth="10.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
                <HBox.margin>
                   <Insets left="5.0" top="10.0" />
                </HBox.margin>
             </ImageView>
-            <VBox fx:id="cellMainBox">
+            <VBox fx:id="cellMainBox" HBox.hgrow="ALWAYS">
                <children>
                   <BorderPane fx:id="cellBorderPane" VBox.vgrow="NEVER">
                      <left>

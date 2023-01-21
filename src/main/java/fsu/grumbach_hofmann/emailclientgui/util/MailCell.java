@@ -83,16 +83,16 @@ public class MailCell extends ListCell<MailObject> {
         	
         	cellLabelSender.setWrapText(false);
         	cellLabelDate.setWrapText(false);
-        	cellLabelSender.maxWidthProperty().bind(this.widthProperty().divide(4).multiply(3));
-        	cellLabelDate.maxWidthProperty().bind(this.widthProperty().divide(4));
+        	cellLabelSender.maxWidthProperty().bind(this.widthProperty().subtract(10).divide(4).multiply(3));
+        	cellLabelDate.maxWidthProperty().bind(this.widthProperty().subtract(10).divide(4));
         	
-        	cellBorderPane.maxWidthProperty().bind(this.widthProperty().subtract(30));
+        	cellBorderPane.maxWidthProperty().bind(this.widthProperty().subtract(10).subtract(30));
         	
         	cellLabelSubject.setWrapText(false);
-        	cellLabelSubject.maxWidthProperty().bind(this.widthProperty().subtract(30));
+        	cellLabelSubject.maxWidthProperty().bind(this.widthProperty().subtract(10).subtract(30));
          
         	cellLabelContent.setWrapText(true);
-        	cellLabelContent.maxWidthProperty().bind(this.widthProperty().subtract(30));
+        	cellLabelContent.maxWidthProperty().bind(this.widthProperty().subtract(10).subtract(30));
      
         	setGraphic(cellMainPane);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

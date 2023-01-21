@@ -46,8 +46,6 @@ Java GUI E-Mail Client based on the [Java E-Mail Client](https://github.com/xLPM
 
 see [macOS Color Guide](https://developer.apple.com/design/human-interface-guidelines/foundations/color/) 
 
-## Color Reference
-
 | Color                     | Hex                                                                  |
 | ------------------------- | -------------------------------------------------------------------- |  
 | systemBackground          | ![#000000FF](https://placehold.co/15x15/000000/000000.png) #000000FF |

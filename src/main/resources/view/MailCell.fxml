@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="cellMainPane" nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-radius: 5 5 5 5;" styleClass="tertiarySystemBackground" stylesheets="@../style/DarkTheme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="cellMainPane" nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-color: transparent; -fx-border-color: #1C1C1EFF; -fx-border-width: 1px 0px 0px 0px; -fx-background-radius: 5 5 5 5;" stylesheets="@../style/DarkTheme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox fx:id="cellMainBox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>

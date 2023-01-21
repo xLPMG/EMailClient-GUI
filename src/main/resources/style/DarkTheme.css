@@ -36,15 +36,17 @@
 }
 
  .list-view {
-     -fx-base: #1d1d1d;
-     -fx-control-inner-background: #1d1d1d;
-     -fx-background-color: #1d1d1d;
-     -fx-table-cell-border-color: transparent;
-     -fx-table-header-border-color: transparent;
+     -fx-base: #000000FF;
+     -fx-control-inner-background: #000000FF;
+     -fx-background-color: #000000FF;
      -fx-padding: 5.0;
-     
-     -fx-selection-bar:#0A84FF ;
+/*     -fx-selection-bar:#1C1C1EFF; */
 }
+
+.list-cell:focused {
+    -fx-background-color: #1C1C1EFF;
+}
+
  .table-view {
      -fx-base: #1d1d1d;
      -fx-control-inner-background: #1d1d1d;
@@ -110,7 +112,7 @@
 }
 /* The main scrollbar **track** CSS class */
  .scroll-bar:horizontal .track, .scroll-bar:vertical .track{
-     -fx-background-color:#1C1C1EFF;
+     -fx-background-color:#000000FF;
      -fx-border-color:transparent;
      -fx-background-radius: 0.0em;
      -fx-border-radius:2.0em;

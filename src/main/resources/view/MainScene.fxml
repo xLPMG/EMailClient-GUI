@@ -39,9 +39,9 @@
                <center>
                   <SplitPane fx:id="splitPane" dividerPositions="0.5" BorderPane.alignment="CENTER">
                     <items>
-                        <VBox styleClass="tertiarySystemBackground">
+                        <VBox styleClass="systemBackground">
                            <children>
-                              <Pane maxHeight="-Infinity" prefHeight="50.0" styleClass="secondarySystemBackground" VBox.vgrow="ALWAYS">
+                              <Pane maxHeight="-Infinity" prefHeight="50.0" styleClass="systemBackground" VBox.vgrow="ALWAYS">
                                  <children>
                                     <VBox>
                                        <children>
@@ -58,14 +58,14 @@
                                     </VBox>
                                  </children>
                               </Pane>
-                              <ListView fx:id="messagesList" styleClass="secondarySystemBackground" VBox.vgrow="ALWAYS">
+                              <ListView fx:id="messagesList" styleClass="systemBackground" VBox.vgrow="ALWAYS">
                               
                               </ListView>
                            </children>
                         </VBox>
                         <VBox styleClass="tertiarySystemBackground">
                            <children>
-                              <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" styleClass="secondarySystemBackground" VBox.vgrow="ALWAYS">
+                              <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" styleClass="systemBackground" VBox.vgrow="ALWAYS">
                                  <children>
                                     <HBox fx:id="messagesMenuBar" alignment="CENTER_LEFT" maxHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0">
                                        <children>
@@ -97,15 +97,15 @@
                                     </HBox>
                                  </children>
                               </Pane>
-                              <ScrollPane fx:id="messageDisplayScrollPane" fitToWidth="true" hbarPolicy="NEVER" styleClass="secondarySystemBackground" VBox.vgrow="ALWAYS">
+                              <ScrollPane fx:id="messageDisplayScrollPane" fitToWidth="true" hbarPolicy="NEVER" styleClass="systemBackground" VBox.vgrow="ALWAYS">
                                  <content>
-                                    <AnchorPane fx:id="messageDisplayPane" style="-fx-background-radius: 5 5 5 5;" styleClass="tertiarySystemBackground" stylesheets="@../style/DarkTheme.css">
+                                    <AnchorPane fx:id="messageDisplayPane" style="-fx-background-radius: 5 5 5 5;" styleClass="secondarySystemBackground" stylesheets="@../style/DarkTheme.css">
                                        <children>
                                           <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                 <BorderPane VBox.vgrow="ALWAYS">
                                                    <left>
-                                                      <Label fx:id="senderLabel" styleClass="secondaryLabel" text="Sender" BorderPane.alignment="CENTER">
+                                                      <Label fx:id="senderLabel" styleClass="primarylabel" text="Sender" BorderPane.alignment="CENTER">
                                                          <font>
                                                             <Font size="15.0" />
                                                          </font></Label>
@@ -114,7 +114,7 @@
                                                       <Label fx:id="dateLabel" styleClass="tertiaryLabel" text="Date" BorderPane.alignment="CENTER" />
                                                    </right>
                                                 </BorderPane>
-                                                <Label fx:id="subjectLabel" styleClass="secondaryLabel" text="Subject" />
+                                                <Label fx:id="subjectLabel" styleClass="primarylabel" text="Subject" />
                                                 <HBox VBox.vgrow="ALWAYS">
                                                    <children>
                                                       <Label fx:id="toTextLabel" styleClass="secondaryLabel" text="To: " />

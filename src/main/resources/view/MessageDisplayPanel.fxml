@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane styleClass="tertiarySystemBackground" stylesheets="@../style/DarkTheme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <BorderPane VBox.vgrow="ALWAYS">
+               <left>
+                  <Label fx:id="senderLabel" styleClass="secondaryLabel" text="Sender" BorderPane.alignment="CENTER" />
+               </left>
+               <right>
+                  <Label fx:id="dateLabel" styleClass="tertiaryLabel" text="Date" BorderPane.alignment="CENTER" />
+               </right>
+            </BorderPane>
+            <Label fx:id="subjectLabel" styleClass="secondaryLabel" text="Subject" />
+            <HBox VBox.vgrow="ALWAYS">
+               <children>
+                  <Label styleClass="secondaryLabel" text="To: " />
+                  <Label fx:id="toLabel" styleClass="tertiaryLabel" text="recipients" />
+               </children>
+            </HBox>
+            <Separator style="-fx-background-color: black;" />
+            <Label fx:id="contentLabel" styleClass="secondaryLabel" text="Text" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

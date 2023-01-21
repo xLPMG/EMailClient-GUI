@@ -7,35 +7,28 @@
  .tertiarySystemBackground {
      -fx-background-color: #2C2C2EFF;
 }
- .secondarySystemBackground {
-     -fx-background-color: #1d1d1d;
-}
  .primarylabel {
      -fx-font-family: "Segoe UI Semibold";
-     -fx-text-fill: white;
-     -fx-opacity: 1.0;
+     -fx-text-fill: #FFFFFFFF;
 }
  .secondaryLabel {
      -fx-font-family: "Segoe UI Semibold";
      -fx-text-fill: #EBEBF599;
-     -fx-opacity: 1.0;
 }
  .tertiaryLabel {
      -fx-font-family: "Segoe UI Semibold";
      -fx-text-fill: #EBEBF54D;
-     -fx-opacity: 1.0;
 }
  .quaternaryLabel {
      -fx-font-family: "Segoe UI Semibold";
      -fx-text-fill: #EBEBF52E;
-     -fx-opacity: 1.0;
 }
  .highlightLabel {
-     -fx-text-fill: #0A84FF;
+     -fx-text-fill: #0A84FFFF;
 }
 
  .highlightNegativeLabel {
-     -fx-text-fill: #FF453A;
+     -fx-text-fill: #FF453AFF;
 }
 
  .separator {

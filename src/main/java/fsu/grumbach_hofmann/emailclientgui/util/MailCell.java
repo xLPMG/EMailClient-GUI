@@ -59,9 +59,9 @@ public class MailCell extends ListCell<MailObject> {
         }
         else {
         	if (mailObject.isSeen()) {
-        		cellLabelSender.setStyle("-fx-text-fill:#FFFFFF; -fx-font-size: 14.0pt");
+        		cellLabelSender.setStyle("-fx-text-fill:#FFFFFFFF; -fx-font-size: 14.0pt");
 			}else {
-				cellLabelSender.setStyle("-fx-text-fill:#0A84FF; -fx-font-size: 16.0pt");
+				cellLabelSender.setStyle("-fx-text-fill:#0A84FFFF; -fx-font-size: 16.0pt");
 			}
         	
         	cellLabelSender.setText(mailObject.getFrom());

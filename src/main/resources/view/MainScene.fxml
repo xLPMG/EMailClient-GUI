@@ -105,7 +105,10 @@
                                              <children>
                                                 <BorderPane VBox.vgrow="ALWAYS">
                                                    <left>
-                                                      <Label fx:id="senderLabel" styleClass="secondaryLabel" text="Sender" BorderPane.alignment="CENTER" />
+                                                      <Label fx:id="senderLabel" styleClass="secondaryLabel" text="Sender" BorderPane.alignment="CENTER">
+                                                         <font>
+                                                            <Font size="15.0" />
+                                                         </font></Label>
                                                    </left>
                                                    <right>
                                                       <Label fx:id="dateLabel" styleClass="tertiaryLabel" text="Date" BorderPane.alignment="CENTER" />

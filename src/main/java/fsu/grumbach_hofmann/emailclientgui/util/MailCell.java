@@ -68,7 +68,6 @@ public class MailCell extends ListCell<MailObject> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }
         else {
-
         	if (mailObject.isSeen()) {
         		seenIndicatorImage.setImage(transparentDotImg);
 			}else {

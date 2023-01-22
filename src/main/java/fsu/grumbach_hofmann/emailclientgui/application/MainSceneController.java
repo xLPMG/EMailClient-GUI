@@ -53,6 +53,9 @@ public class MainSceneController {
 
 	@FXML
 	private Button btnReceiveMails;
+	
+    @FXML
+    private Button btnUnreadMail;
 
 	@FXML
 	private Button btnWriteMail;
@@ -142,10 +145,16 @@ public class MainSceneController {
 		ImageView btnDeleteMailImgView = new ImageView(btnDeleteMailImg);
 		btnDeleteMailImgView.setFitHeight(btnDeleteMail.getHeight());
 		btnDeleteMailImgView.setPreserveRatio(true);
+		
+		Image btnUnreadMailImg = new Image("unreadIcon.png");
+		ImageView btnUnreadMailImgView = new ImageView(btnUnreadMailImg);
+		btnUnreadMailImgView.setFitHeight(btnUnreadMail.getHeight());
+		btnUnreadMailImgView.setPreserveRatio(true);
 
 		btnReceiveMails.setGraphic(btnReceiveMailsImgView);
 		btnWriteMail.setGraphic(btnWriteNewMailImgView);
 		btnDeleteMail.setGraphic(btnDeleteMailImgView);
+		btnUnreadMail.setGraphic(btnUnreadMailImgView);
 	}
 
 	@FXML
@@ -234,6 +243,15 @@ public class MainSceneController {
 			}
 		}).start();
 	}
+	
+    @FXML
+    void unreadMail(ActionEvent event) {
+    	if(selectedMail!=null) {
+    		handler.updateSeen(selectedMail, selectedAccount, false);
+    		messagesList.refresh();
+			updateUnseenMessageCount();
+    	}
+    }
 
 	private void initMessagesElements() {
 		messageDisplayScrollPane.setMinWidth(messagesMenuBar.getWidth() + 15);

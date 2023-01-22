@@ -93,6 +93,7 @@
                                                 <Insets left="5.0" />
                                              </HBox.margin>
                                           </Button>
+                                          <Button fx:id="btnUnreadMail" mnemonicParsing="false" onAction="#unreadMail" prefHeight="30.0" prefWidth="30.0" styleClass="imageButton" />
                                        </children>
                                     </HBox>
                                  </children>

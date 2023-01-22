@@ -331,6 +331,8 @@ public class DataHandler {
 				saveMail(message, account.getUsername(), true);
 				if (seen) {
 					unseenMessageCount.put(account, unseenMessageCount.getOrDefault(account, 1) - 1);
+				}else {
+					unseenMessageCount.put(account, unseenMessageCount.getOrDefault(account, -1) + 1);
 				}
 			} catch (MessagingException e) {
 				e.printStackTrace();

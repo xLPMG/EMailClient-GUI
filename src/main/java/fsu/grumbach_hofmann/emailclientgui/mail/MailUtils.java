@@ -110,10 +110,8 @@ public class MailUtils {
 			transport.connect(outboxAddress, outboxPort, email, password);
 			transport.close();
 		} catch (AuthenticationFailedException e) {
-//			System.out.println("falsche email / passwort");
 			return MailCheckResult.AUTHENTICATION_FAILED;
 		} catch (MessagingException e) {
-//			System.out.println("falscher server");
 			return MailCheckResult.WRONG_SERVER;
 		}
 		return MailCheckResult.OK;

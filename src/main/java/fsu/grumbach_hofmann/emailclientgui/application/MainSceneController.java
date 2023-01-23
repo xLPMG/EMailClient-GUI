@@ -170,7 +170,6 @@ public class MainSceneController {
 			stage.setTitle("Add new account");
 			stage.setScene(newAccountScene);
 			stage.show();
-			// update accounts menu after closing window
 			stage.setOnHidden(e -> {
 				updateAccountsList();
 			});
@@ -254,8 +253,6 @@ public class MainSceneController {
     }
 
 	private void initMessagesElements() {
-		messageDisplayScrollPane.setMinWidth(messagesMenuBar.getWidth() + 15);
-
 		messageDisplayPane.setVisible(false);
 		messagesList.setCellFactory(new MailCellFactory());
 		messagesList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -290,6 +287,7 @@ public class MainSceneController {
 			}
 		});
 
+		messageDisplayScrollPane.setMinWidth(messagesMenuBar.getWidth() + 15);
 		messageDisplayScrollPane.widthProperty().addListener(new ChangeListener<Object>() {
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				messageDisplayPane.setMaxWidth(messageDisplayScrollPane.getWidth() - 30);
@@ -337,7 +335,6 @@ public class MainSceneController {
 							selectedAccount = acc;
 							handler.loadMails(acc);
 							updateMessagesList();
-							// TODO: receive all new mails on account switch?
 							inboxLabel.setText("Inbox - " + selectedAccount.getEmail() + " - receiving mails...");
 							new Thread(() -> {
 								receiver.receiveMails(selectedAccount, 10);

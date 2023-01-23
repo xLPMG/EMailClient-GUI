@@ -12,23 +12,24 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
+import fsu.grumbach_hofmann.emailclientgui.mail.MailUtils;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 
-import fsu.grumbach_hofmann.emailclientgui.mail.MailObject;
-import fsu.grumbach_hofmann.emailclientgui.mail.MailUtils;
-
 public class DataHandler {
 
 	String os = "win";
 
-	private ArrayList<Account> accountList = new ArrayList<>();
-	private HashMap<Account, ArrayList> mailListMap = new HashMap<>();
-	private HashMap<Account, Integer> unseenMessageCount = new HashMap<Account, Integer>();
+	private List<Account> accountList = new ArrayList<Account>();
+	private Map<Account, ArrayList<MailObject>> mailListMap = new HashMap<>();
+	private Map<Account, Integer> unseenMessageCount = new HashMap<Account, Integer>();
 
 	private File programFolder;
 	private File userData;
@@ -177,7 +178,7 @@ public class DataHandler {
 		}
 	}
 
-	public ArrayList<Account> getAccountData() {
+	public List<Account> getAccountData() {
 		return accountList;
 	}
 
@@ -347,7 +348,7 @@ public class DataHandler {
 
 	}
 
-	public ArrayList<MailObject> getMailList(Account account) {
+	public List<MailObject> getMailList(Account account) {
 		return mailListMap.get(account);
 	}
 

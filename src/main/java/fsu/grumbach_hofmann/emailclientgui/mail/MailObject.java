@@ -80,7 +80,7 @@ public class MailObject implements Comparable<MailObject> {
 	}
 	
 	public String getContent() {
-		return content==null ? "" : content;
+		return content==null ? "No content available" : content;
 	}
 	
 	public String getHtml() {

@@ -52,22 +52,21 @@ public class SendSceneController {
 
 	@FXML
 	void sendMail(ActionEvent event) {
-//		boolean isFromEmpty = sendFromTextField.getText().equals("");
-		boolean isToEmpty = sendToTextField.getText().equals("");
-		boolean isFromEqualEMail = sendFromTextField.getText().equals(selectedAccount.getEmail());
-//		if (isFromEmpty) {
-//			sendFromTextField.setPromptText("missing input.");
-//			return;
-//		}
-		if (isToEmpty) {
+		if (sendToTextField.getText().equals("")) {
 			sendToTextField.setPromptText("missing input.");
 			return;
 		}
+		
 		//TODO: not really necessary as field is non editable
-		if (!isFromEqualEMail) {
+		if (sendFromTextField.getText().equals("")) {
+			sendFromTextField.setPromptText("missing input.");
+			return;
+		}
+		if (!sendFromTextField.getText().equals(selectedAccount.getEmail())) {
 			sendFromTextField.setPromptText("Use your set e-mail address");
 			return;
 		}
+		//END TODO
 
 		if (selectedAccount != null) {
 			sender.sendMail(selectedAccount, sendSubjectTextField.getText(), sendCopyTextField.getText(),

@@ -35,8 +35,10 @@ public class MailReceiver {
 				isLockedMap.put(acc, true);
 			}
 		}
-		long startTime = System.currentTimeMillis();
+
 		try {
+			long startTime = System.currentTimeMillis();
+			
 			String serverAddress = acc.getInbox();
 			int serverPort = acc.getInboxPort();
 			String username = acc.getUsername();

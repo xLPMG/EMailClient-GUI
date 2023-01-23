@@ -21,9 +21,8 @@ public class MainWindow extends Application {
 		try {
 			root = rootLoader.load();
 		} catch (IOException e) {
-
 			e.printStackTrace();
-			System.err.println("Could no initialize FXMLLoader.");
+			System.err.println("Could not initialize FXMLLoader.");
 			System.exit(1);
 		}
 

@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -92,12 +93,12 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="newAccPasswordTextField" HBox.hgrow="ALWAYS">
+            <PasswordField fx:id="newAccPasswordTextField" HBox.hgrow="ALWAYS">
                <styleClass>
                   <String fx:value="secondarySystemBackground" />
                   <String fx:value="primarylabel" />
                </styleClass>
-            </TextField>
+            </PasswordField>
          </children>
          <VBox.margin>
             <Insets bottom="5.0" top="5.0" />

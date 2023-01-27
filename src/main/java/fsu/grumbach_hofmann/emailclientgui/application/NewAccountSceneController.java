@@ -72,7 +72,7 @@ public class NewAccountSceneController {
 	@FXML
 	void addAccount(ActionEvent event) {
 
-		if (!checkMandatoryFields(textFieldArrayList) || isPortCorrect(newAccInboxPortTextField.getText())) {
+		if (!checkMandatoryFields(textFieldArrayList) || !isPortCorrect(newAccInboxPortTextField.getText())) {
 			return;
 		}
 

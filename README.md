@@ -42,23 +42,6 @@ Java GUI E-Mail Client based on the [Java E-Mail Client](https://github.com/xLPM
     - load old eMails when starting the program
     - when retrieving eMails from the server, load only new ones (even after program restart).
 
-## Color Reference
-
-see [macOS Color Guide](https://developer.apple.com/design/human-interface-guidelines/foundations/color/) 
-
-| Color                     | Hex                                                                  |
-| ------------------------- | -------------------------------------------------------------------- |  
-| systemBackground          | ![#000000FF](https://placehold.co/15x15/000000/000000.png) #000000FF |
-| secondarySystemBackground | ![#1C1C1EFF](https://placehold.co/15x15/1C1C1E/1C1C1E.png) #1C1C1EFF |
-| tertiarySystemBackground  | ![#2C2C2EFF](https://placehold.co/15x15/2C2C2E/2C2C2E.png) #2C2C2EFF |
-| primarylabel              | ![#FFFFFFFF](https://placehold.co/15x15/FFFFFF/FFFFFF.png) #FFFFFFFF |
-| secondaryLabel            | ![#EBEBF599](https://placehold.co/15x15/EBEBF5/EBEBF5.png) #EBEBF599 |
-| tertiaryLabel             | ![#EBEBF54D](https://placehold.co/15x15/EBEBF5/EBEBF5.png) #EBEBF54D |
-| quaternaryLabel           | ![#EBEBF52E](https://placehold.co/15x15/EBEBF5/EBEBF5.png) #EBEBF52E |
-| highlightLabel            | ![#0A84FFFF](https://placehold.co/15x15/0A84FF/0A84FF.png) #0A84FFFF |
-| highlightNegativeLabel    | ![#FF453AFF](https://placehold.co/15x15/FF453A/FF453A.png) #FF453AFF |
-
 ## Demo
-
-in progress
-
+<img width="1112" alt="screen1" src="https://user-images.githubusercontent.com/17238289/218271155-5f568714-1e1a-4c29-a4e3-2a8352340979.png">
+<img width="1112" alt="screen2" src="https://user-images.githubusercontent.com/17238289/218271153-a11ad0d0-3e8e-4a06-b236-9f55eca1e6fc.png">

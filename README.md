@@ -41,6 +41,12 @@ Java GUI E-Mail Client based on the [Java E-Mail Client](https://github.com/xLPM
     - Management of emails on hard disk
     - load old eMails when starting the program
     - when retrieving eMails from the server, load only new ones (even after program restart).
+    
+**Extra features:**
+- HTML support
+- if appropriate, "Today" and "Yesterday" is displayed instead of the message date
+- account data such as email & password is encrypted using AES and machine dependent keys before being stored
+- fully responsive design
 
 ## Demo
 <img width="1112" alt="screen1" src="https://user-images.githubusercontent.com/17238289/218271155-5f568714-1e1a-4c29-a4e3-2a8352340979.png">

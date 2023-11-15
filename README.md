@@ -1,7 +1,7 @@
 
 # EMailClient-GUI
 
-Java GUI E-Mail Client based on the [Java E-Mail Client](https://github.com/xLPMG/EMailClient) 
+Java E-Mail Client with GUI
 - **Institution:** FSU Jena, Comp Sci Year 3
 - **Course:** Advanced programming course: E-Mail Client
 - **Deadline:** 10.02.2023
